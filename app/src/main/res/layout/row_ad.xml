@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="10dp"
     app:cardUseCompatPadding="true">
@@ -30,18 +30,19 @@
             android:layout_toEndOf="@+id/imageIv"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="The Ad Title"/>
+            android:text="İlan Başlığı"/>
 
         <TextView
-             android:id="@+id/descriptionTv"
+            android:id="@+id/descriptionTv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/TextAppearance.MaterialComponents.Body2"
             android:layout_toEndOf="@+id/imageIv"
-            android:layout_below="@+id/favBtn"
+            android:layout_below="@+id/titleTv"
+            android:layout_toStartOf="@+id/favBtn"
             android:ellipsize="end"
             android:lines="3"
-            android:text="The long description of the Ad that can be of multiple lines but will show here in 3 lines"/>
+            android:text="Reklamın birden fazla satırdan oluşan ancak burada 3 satır halinde gösterilecek olan uzun açıklaması"/>
 
         
         <ImageButton
@@ -58,7 +59,7 @@
             style="@style/TextAppearance.MaterialComponents.Caption"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="The Address of the Ad"
+            android:text="İlanın Adresi"
             android:layout_toEndOf="@+id/imageIv"
             android:layout_below="@+id/descriptionTv"
             android:ellipsize="end"
@@ -71,7 +72,7 @@
             style="@style/TextAppearance.MaterialComponents.Overline"
             android:layout_toEndOf="@id/imageIv"
             android:layout_below="@+id/addressTv"
-            android:text="New"
+            android:text="Yeni"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="5dp"
             android:textSize="12sp"/>
@@ -83,7 +84,7 @@
             style="@style/TextAppearance.MaterialComponents.Caption"
             android:layout_below="@+id/addressTv"
             android:layout_toEndOf="@+id/conditionTv"
-            android:text="@string/price_symbol"
+            android:text="TL"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="2dp"
             android:textSize="12sp"/>

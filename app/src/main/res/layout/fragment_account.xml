@@ -29,7 +29,7 @@
         style="@style/TextAppearance.MaterialComponents.Body1"
         android:layout_below="@id/profileIv"
         android:layout_marginTop="20dp"
-        android:text="Name"/>
+        android:text="İsim"/>
 
         <TextView
             android:id="@+id/nameTv"
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             style="@style/TextAppearance.MaterialComponents.Caption"
             android:layout_marginTop="20dp"
-            android:text="Full Name"
+            android:text="Ad Soyad"
             android:layout_below="@+id/profileIv"
             android:layout_alignParentEnd="true"/>
 
@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/nameLabelTv"
             android:layout_alignParentEnd="true"
-            android:text="example@example.com"
+            android:text="örnek@örnek.com"
             style="@style/TextAppearance.MaterialComponents.Caption"
             android:layout_marginTop="10dp"/>
 
@@ -65,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/TextAppearance.MaterialComponents.Body1"
-            android:text="Phone"
+            android:text="Telefon"
             android:layout_marginTop="10dp"
             android:layout_below="@id/emailLabelTv"/>
 
@@ -84,7 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/TextAppearance.MaterialComponents.Body1"
-            android:text="DOB"
+            android:text="Doğum Tarihi"
             android:layout_marginTop="10dp"
             android:layout_below="@id/phoneLabelTv"/>
 
@@ -103,7 +103,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/dobLabelTv"
-            android:text="Member since"
+            android:text="Üyelik Tarihi"
             style="@style/TextAppearance.MaterialComponents.Body1"
             android:layout_marginTop="10dp"/>
 
@@ -122,7 +122,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/TextAppearance.MaterialComponents.Body1"
-            android:text="Account Status"
+            android:text="Hesap Durumu"
             android:layout_marginTop="10dp"
             android:layout_below="@id/memberSinceLabelTv"/>
 
@@ -130,7 +130,7 @@
             android:id="@+id/verificationTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Not Verified"
+            android:text="Doğrulanmadı"
             style="@style/TextAppearance.MaterialComponents.Caption"
             android:layout_alignParentEnd="true"
             android:layout_below="@+id/memberSinceLabelTv"
@@ -147,7 +147,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
-                android:text="Prefernces"/>
+                android:text="Tercihler"/>
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/logoutCv"
@@ -163,7 +163,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Logout"
+                    android:text="Oturumu kapat"
                     android:gravity="center_vertical"
                     android:drawableStart="@drawable/ic_logout_gray"
                     android:drawableEnd="@drawable/ic_next_gray"
@@ -184,7 +184,7 @@
                <TextView
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
-                   android:text="Edit Profile"
+                   android:text="Profili Düzenle"
                    android:gravity="center_vertical"
                    android:drawablePadding="10dp"
                    android:drawableEnd="@drawable/ic_next_gray"
@@ -206,7 +206,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Change Password"
+                    android:text="Şifre değiştir"
                     android:gravity="center_vertical"
                     android:drawableEnd="@drawable/ic_next_gray"
                     android:drawableStart="@drawable/ic_lock_gray"
@@ -228,7 +228,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Verify Account"
+                    android:text="Hesabı Doğrula"
                     android:gravity="center_vertical"
                     android:drawableEnd="@drawable/ic_next_gray"
                     android:drawableStart="@drawable/ic_verified_gray"
@@ -250,7 +250,7 @@
                <TextView
                    android:layout_width="match_parent"
                    android:layout_height="wrap_content"
-                   android:text="Delete Account"
+                   android:text="Hesabı Sil"
                    android:drawableStart="@drawable/ic_block_gray"
                    android:drawableEnd="@drawable/ic_next_gray"
                    android:gravity="center_vertical"

@@ -25,7 +25,7 @@
             android:id="@+id/toolbarTitleTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Delete Account"
+            android:text="Hesabı Sil"
             android:layout_centerInParent="true"
             style="@style/TextAppearance.MaterialComponents.Body1"/>
 
@@ -51,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/profileIv"
-            android:text="Are you sure you want to delete your account including data? \n You will not be able to access your account again! \n This action cannot be undone."
+            android:text="Veriler de dahil olmak üzere hesabınızı silmek istediğinizden emin misiniz? \n Hesabınıza bir daha erişemeyeceksiniz! \n Bu işlem geri alınamaz."
             style="@style/TextAppearance.MaterialComponents.Caption"
             android:textAlignment="center"
             android:textStyle="italic"/>
@@ -60,7 +60,7 @@
             android:id="@+id/submitBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Confirm Delete"
+            android:text="Silmeyi Onayla"
             android:layout_alignParentBottom="true"
             app:cornerRadius="8dp"
             app:icon="@drawable/ic_block_gray"

@@ -25,8 +25,8 @@
             android:id="@+id/toolbarTitleTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Create Ad"
             android:layout_centerInParent="true"
+            android:text="İlan Oluştur"
             style="@style/TextAppearance.MaterialComponents.Body1"/>
 
         <ImageButton
@@ -62,7 +62,7 @@
                 android:id="@+id/imagesLabelTv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Pick up to 10 images"
+                android:text="En fazla 10 görüntü seçin"
                 android:layout_marginBottom="10dp"
                 style="@style/TextAppearance.MaterialComponents.Body1"/>
 
@@ -77,12 +77,12 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/brandTil"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/imagesRv"
                 android:layout_marginTop="10dp"
-                android:hint="Brand"
+                android:hint="Marka"
                 app:startIconDrawable="@drawable/ic_brand_white"
                 app:boxCornerRadiusBottomEnd="8dp"
                 app:boxCornerRadiusBottomStart="8dp"
@@ -108,7 +108,7 @@
                 app:boxCornerRadiusTopEnd="8dp"
                 app:boxCornerRadiusBottomStart="8dp"
                 app:boxCornerRadiusBottomEnd="8dp"
-                android:hint="Category">
+                android:hint="Kategori">
 
                 <AutoCompleteTextView
                     android:id="@+id/categoryAct"
@@ -129,7 +129,7 @@
                 app:boxCornerRadiusTopEnd="8dp"
                 app:boxCornerRadiusBottomStart="8dp"
                 app:boxCornerRadiusBottomEnd="8dp"
-                android:hint="Condition">
+                android:hint="Durum">
 
                 <AutoCompleteTextView
                     android:id="@+id/conditionAct"
@@ -150,7 +150,7 @@
                 app:boxCornerRadiusTopEnd="8dp"
                 app:boxCornerRadiusBottomStart="8dp"
                 app:boxCornerRadiusBottomEnd="8dp"
-                android:hint="Location">
+                android:hint="Konum">
 
                 <AutoCompleteTextView
                     android:id="@+id/locationAct"
@@ -165,7 +165,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Price"
+                android:hint="Fiyat"
                 app:boxCornerRadiusBottomEnd="8dp"
                 app:boxCornerRadiusBottomStart="8dp"
                 app:boxCornerRadiusTopEnd="8dp"
@@ -186,7 +186,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Title"
+                android:hint="Başlık"
                 app:boxCornerRadiusBottomEnd="8dp"
                 app:boxCornerRadiusBottomStart="8dp"
                 app:boxCornerRadiusTopEnd="8dp"
@@ -196,7 +196,7 @@
 
                 <EditText
                     android:id="@+id/titleEt"
-                    android:inputType="textMultiLine|textCapSentences"
+                    android:inputType="textPersonName|textCapSentences"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
 
@@ -207,7 +207,7 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Description"
+                android:hint="Tanım"
                 app:boxCornerRadiusBottomEnd="8dp"
                 app:boxCornerRadiusBottomStart="8dp"
                 app:boxCornerRadiusTopEnd="8dp"
@@ -235,9 +235,9 @@
         android:layout_height="wrap_content"
         android:minHeight="@dimen/m_button_height"
         android:layout_alignParentBottom="true"
+        android:text="İlan Ver"
         app:cornerRadius="8dp"
-        android:layout_margin="10dp"
-        android:text="Post Ad"/>
+        android:layout_margin="10dp" />
 
 
 </RelativeLayout>

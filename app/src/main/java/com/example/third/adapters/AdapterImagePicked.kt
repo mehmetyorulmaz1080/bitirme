@@ -36,6 +36,7 @@ class AdapterImagePicked(
 
         val model = imagesPickedArrayList[position]
 
+
         if (model.fromInternet){
 
             try {
@@ -77,14 +78,14 @@ class AdapterImagePicked(
 
             } else{
 
-                imagesPickedArrayList.removeAt(position)
+                imagesPickedArrayList.remove(model)
                 notifyDataSetChanged()
             }
 
         }
     }
 
-    private fun deleteImageFirebase(model: ModelImagePicked, holder: AdapterImagePicked.HolderImagePicked, position: Int) {
+    private fun deleteImageFirebase(model: ModelImagePicked, holder: HolderImagePicked, position: Int) {
 
         val imageId = model.id
 

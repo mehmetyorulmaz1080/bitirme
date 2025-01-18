@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Phone Login"
+            android:text="Telefon Girişi"
             style="@style/TextAppearance.MaterialComponents.Body1"/>
 
         <View
@@ -57,7 +57,7 @@
             android:id="@+id/loginLabelTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Login To Your Account"
+            android:text="Hesabınıza Giriş Yapın"
             android:layout_below="@+id/profileIv"
             android:layout_centerHorizontal="true"
             style="@style/TextAppearance.MaterialComponents.Subtitle1"
@@ -83,8 +83,8 @@
                 app:ccp_autoDetectCountry="true"
                 app:ccp_contentColor="@color/colorGray01"
                 app:ccp_rememberLastSelection="true"
-                ccp_showFlag="false"
-                ccp_showNameCode="false"/>
+                app:ccp_showFlag="false"
+                app:ccp_showNameCode="false"/>
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/phoneNumberTil"
@@ -92,7 +92,7 @@
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_toEndOf="@+id/phoneCodeTil"
-                android:hint="Phone Number"
+                android:hint="Telefon Numarası"
                 app:boxCornerRadiusTopStart="8dp"
                 app:boxCornerRadiusTopEnd="8dp"
                 app:boxCornerRadiusBottomStart="8dp"
@@ -109,8 +109,8 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/sendOtpBtn"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Send Otp"
+                android:layout_height="@dimen/m_button_height"
+                android:text="Kodu Gönder"
                 android:layout_marginTop="10dp"
                 android:layout_below="@+id/phoneNumberTil"
                 app:cornerRadius="8dp"/>
@@ -130,7 +130,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:hint="OTP"
+                android:hint="Kod"
                 app:boxCornerRadiusTopStart="8dp"
                 app:boxCornerRadiusTopEnd="8dp"
                 app:boxCornerRadiusBottomStart="8dp"
@@ -152,14 +152,14 @@
                 android:layout_height="@dimen/m_button_height"
                 android:layout_below="@+id/otpTil"
                 android:layout_marginTop="10dp"
-                android:text="Verify"
+                android:text="Doğrula"
                 app:cornerRadius="8dp"/>
 
             <TextView
                 android:id="@+id/resendOtpTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/didn_t_receive_otp_resend"
+                android:text="@string/kod_almad_n_z_m_yeniden_g_nderin"
                 android:layout_below="@+id/verifyOtpBtn"
                 android:padding="5dp"
                 android:layout_centerHorizontal="true"

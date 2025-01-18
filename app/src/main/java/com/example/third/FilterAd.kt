@@ -18,8 +18,8 @@ class FilterAd (
         if (!constraint.isNullOrEmpty()) {
             constraint = constraint.toString().uppercase(Locale.getDefault())
 
-            val filteredModels: ArrayList<ModelAd> = ArrayList()
-            for (i in 0 until filterlist.size) {
+            val filteredModels = ArrayList<ModelAd>()
+            for (i in filterlist.indices) {
                 if (filterlist[i].brand.uppercase(Locale.getDefault()).contains(constraint) ||
                     filterlist[i].category.uppercase(Locale.getDefault()).contains(constraint) ||
                     filterlist[i].condition.uppercase(Locale.getDefault()).contains(constraint) ||
@@ -43,7 +43,7 @@ class FilterAd (
 
     override fun publishResults(constraint: CharSequence?, results: FilterResults) {
 
-        adapter.adArrylist = results.values as ArrayList<ModelAd>
+        adapter.adArraylist = results.values as ArrayList<ModelAd>
         adapter.notifyDataSetChanged()
 
     }

@@ -1,5 +1,6 @@
 package com.example.third.activities
 
+import android.app.Activity
 import android.app.ProgressDialog
 import android.content.ContentValues
 import android.content.Intent
@@ -45,12 +46,15 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private lateinit var firebaseAuth: FirebaseAuth
+
     private lateinit var progressDialog: ProgressDialog
 
     private var receiptUid = ""
+
     private var receiptFcmToken = ""
 
     private var myUid = ""
+
     private var myName = ""
 
     private var chatPath = ""
@@ -59,6 +63,7 @@ class ChatActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding =ActivityChatBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -120,7 +125,7 @@ class ChatActivity : AppCompatActivity() {
                     try {
 
                         val name = "${snapshot.child("name").value}"
-                        val profileImageUrl = "${snapshot.child("profileImage").value}"
+                        val profileImageUrl = "${snapshot.child("profileImageUrl").value}"
                         receiptFcmToken = "${snapshot.child("fcmToken").value}"
                         Log.d(TAG, "onDataChange: name: $name")
                         Log.d(TAG, "onDataChange: profileImageUrl: $profileImageUrl")
@@ -181,9 +186,11 @@ class ChatActivity : AppCompatActivity() {
 
         popupMenu.menu.add(Menu.NONE,1,1,"Camera")
         popupMenu.menu.add(Menu.NONE,2,2,"Gallery")
+
         popupMenu.show()
 
         popupMenu.setOnMenuItemClickListener { menuItem ->
+
             val itemId = menuItem.itemId
 
             if (itemId == 1){
@@ -192,7 +199,7 @@ class ChatActivity : AppCompatActivity() {
 
                     requestCameraPermissions.launch(arrayOf(android.Manifest.permission.CAMERA))
                 }else{
-                requestCameraPermissions.launch(arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                    requestCameraPermissions.launch(arrayOf(android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE))
                 }
 
             }else if(itemId == 2){
@@ -217,8 +224,8 @@ class ChatActivity : AppCompatActivity() {
 
         var areAllGranted = true
 
-        for (isGranted in result.entries){
-            areAllGranted = areAllGranted && isGranted.value
+        for (isGranted in result.values){
+            areAllGranted = areAllGranted && isGranted
         }
         if (areAllGranted){
             Log.d(TAG, "requestCameraPermissions: granted")
@@ -248,7 +255,7 @@ class ChatActivity : AppCompatActivity() {
         Log.d(TAG, "pickImageCamera: ")
 
         val contentValues = ContentValues()
-        contentValues.put(MediaStore.Images.Media.TITLE, "Pick Image")
+        contentValues.put(MediaStore.Images.Media.TITLE, "THE_IMAGE_TITLE")
         contentValues.put(MediaStore.Images.Media.DESCRIPTION, "THE_IMAGE_DESCRIPTION")
         imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
 
@@ -260,7 +267,7 @@ class ChatActivity : AppCompatActivity() {
     private val cameraActivityResultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ){ result ->
-        if (result.resultCode == RESULT_OK){
+        if (result.resultCode == Activity.RESULT_OK){
             Log.d(TAG, "cameraActivityResultLauncher: imageUri: $imageUri")
             uploadFirebaseStorage()
     }else{
@@ -280,9 +287,11 @@ class ChatActivity : AppCompatActivity() {
     private val galleryActivityResultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ){result ->
-        if (result.resultCode == RESULT_OK){
+        if (result.resultCode == Activity.RESULT_OK){
+
             val data = result.data
-            imageUri = result.data!!.data
+
+            imageUri = data!!.data
             Log.d(TAG, "galleryActivityResultLauncher: imageUri: $imageUri")
 
             uploadFirebaseStorage()
@@ -355,12 +364,13 @@ class ChatActivity : AppCompatActivity() {
 
         val hashMap = HashMap<String,Any>()
         hashMap["messageId"] = "$keyId"
-        hashMap["senderUid"] = "$myUid"
-        hashMap["receiptUid"] = "$receiptUid"
-        hashMap["message"] = "$message"
-        hashMap["timestamp"] = "$timestamp"
         hashMap["messageType"] = "$messageType"
+        hashMap["message"] = "$message"
         hashMap["fromUid"] = "$myUid"
+        //hashMap["senderUid"] = "$myUid"
+        hashMap["toUid"] = "$receiptUid"
+        hashMap["timestamp"] = timestamp
+
 
         refChat.child(chatPath)
             .child(keyId)

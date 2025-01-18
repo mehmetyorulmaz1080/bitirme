@@ -164,11 +164,11 @@ class ProfilEditActivity : AppCompatActivity() {
                     val phoneNumber = "${snapshot.child("phoneNumber").value}"
                     val profileImageUrl = "${snapshot.child("profileImageUrl").value}"
                     val timestamp = "${snapshot.child("timestamp").value}"
-                    val userType = "${snapshot.child("userType").value}"
+                    myUserType = "${snapshot.child("userType").value}"
 
                     val phone = phoneCode + phoneNumber
 
-                    if (myUserType.equals("Email", ignoreCase = true) || myUserType.equals("Google", ignoreCase = true)){
+                    if (myUserType.equals("Email", true) || myUserType.equals("Google", true)){
 
                         binding.emailTil.isEnabled = false
                         binding.emailEt.isEnabled =false
@@ -185,7 +185,7 @@ class ProfilEditActivity : AppCompatActivity() {
                     binding.phoneNumberEt.setText(phoneNumber)
 
                     try {
-                        val phoneCodeInt = phoneCode.replace("+","").toUInt()
+                        val phoneCodeInt = phoneCode.replace("+","").toInt()
                         binding.countryCodePicker.setCountryForPhoneCode(phoneCodeInt.toInt())
                     }
                     catch (e: Exception){

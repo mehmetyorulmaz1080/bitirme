@@ -1,6 +1,7 @@
 package com.example.third.activities
 
 import android.Manifest
+import android.app.Activity
 import android.app.ProgressDialog
 import android.content.ContentValues
 import android.content.Intent
@@ -44,6 +45,7 @@ class AdCreateActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityAdCreateBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -53,13 +55,13 @@ class AdCreateActivity : AppCompatActivity() {
 
         firebaseAuth = FirebaseAuth.getInstance()
 
-        val adapterCategories = ArrayAdapter<String>(this,
+        val adapterCategories = ArrayAdapter(this,
             R.layout.raw_category_act,
             Utils.categories
         )
         binding.categoryAct.setAdapter(adapterCategories)
 
-        val adapterCondition = ArrayAdapter<String>(this,
+        val adapterCondition = ArrayAdapter(this,
             R.layout.row_condition_act,
             Utils.condition
         )
@@ -70,12 +72,13 @@ class AdCreateActivity : AppCompatActivity() {
 
         if (isEditMode){
 
-            adIdForEditing = intent.getStringExtra("adId")?: ""
+            adIdForEditing = intent.getStringExtra("adId") ?: ""
 
             loadAdDetails()
 
             binding.toolbarTitleTv.text = "Update Ad"
             binding.postAdBtn.text = "Update Ad"
+
         }else{
 
             binding.toolbarTitleTv.text = "Create Ad"
@@ -83,14 +86,16 @@ class AdCreateActivity : AppCompatActivity() {
         }
 
         imagesPickedArrayList = ArrayList()
+
         loadImages()
 
         binding.toolbarBackBtn.setOnClickListener{
             onBackPressed()
         }
+
         binding.locationAct.setOnClickListener{
             val intent = Intent(this, LocationPickerActivity::class.java)
-            startActivity(intent)
+            locationPickerActivityResultLauncher.launch(intent)
         }
         binding.toolbarAdImageBtn.setOnClickListener{
             showImagePickOptions()
@@ -105,14 +110,14 @@ class AdCreateActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()){result ->
             Log.d(TAG, "locationPickerResultLauncher: ")
 
-            if(result.resultCode == RESULT_OK){
+            if(result.resultCode == Activity.RESULT_OK){
 
                 val data = result.data
 
                 if (data != null) {
                     latitude = data.getDoubleExtra("latitude", 0.0)
                     longitude = data.getDoubleExtra("longitude", 0.0)
-                    address = data.getStringExtra("address")?: ""
+                    address = data.getStringExtra("address") ?: ""
 
                     Log.d(TAG, "locationPickerResultLauncher: latitude: $latitude")
                     Log.d(TAG, "locationPickerResultLauncher: longitude: $longitude")
@@ -138,11 +143,14 @@ class AdCreateActivity : AppCompatActivity() {
         Log.d(TAG, "showImagePickOptions: ")
 
         val popupMenu = PopupMenu(this, binding.toolbarAdImageBtn)
+
         popupMenu.menu.add(Menu.NONE, 1, 1, "Camera")
         popupMenu.menu.add(Menu.NONE, 2, 2, "Gallery")
+
         popupMenu.show()
 
         popupMenu.setOnMenuItemClickListener { item ->
+
             val itemId = item.itemId
 
             if(itemId == 1){
@@ -158,6 +166,7 @@ class AdCreateActivity : AppCompatActivity() {
                 }
             }
             else if (itemId == 2){
+
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     pickImageGallery()
                 }
@@ -173,7 +182,7 @@ class AdCreateActivity : AppCompatActivity() {
 
     private val requestStoragePermission = registerForActivityResult(
         ActivityResultContracts.RequestPermission()) { isGranted ->
-        Log.d(TAG, "requestStrogePermission: isGranted: $isGranted")
+        Log.d(TAG, "requestStoragePermission: isGranted: $isGranted")
 
         if(isGranted){
             pickImageGallery()
@@ -213,14 +222,10 @@ class AdCreateActivity : AppCompatActivity() {
 
         val contentValues = ContentValues()
         contentValues.put(MediaStore.Images.Media.TITLE, "Temp_Image_Title")
-        contentValues.put(MediaStore.Images.Media.TITLE, "Temp_Image_Description")
+        contentValues.put(MediaStore.Images.Media.DESCRIPTION, "Temp_Image_Description")
 
-        val resolver = contentResolver
-        imageUri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-        if (imageUri == null) {
-            Utils.toast(this, "Failed to create image file in media storage")
-            return
-        }
+
+        imageUri = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
 
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
@@ -232,7 +237,7 @@ class AdCreateActivity : AppCompatActivity() {
     ){result ->
         Log.d(TAG, "galleryActivityResultLauncher: ")
 
-        if(result.resultCode == RESULT_OK) {
+        if(result.resultCode == Activity.RESULT_OK) {
 
             val data = result.data
             imageUri = data!!.data
@@ -257,7 +262,7 @@ class AdCreateActivity : AppCompatActivity() {
     ){result ->
         Log.d(TAG, "cameraActivityResultLauncher: ")
 
-        if(result.resultCode == RESULT_OK) {
+        if(result.resultCode == Activity.RESULT_OK) {
             Log.d(TAG, "cameraActivityResultLauncher: imageUri: $imageUri")
             val timestamp = "${Utils.getTimestamp()}"
             val modelImagePicked = ModelImagePicked(timestamp, imageUri, null, false)
@@ -304,8 +309,8 @@ class AdCreateActivity : AppCompatActivity() {
             binding.conditionAct.requestFocus()
         }
         else if(title.isEmpty()){
-            binding.locationAct.error = "Enter Title"
-            binding.locationAct.requestFocus()
+            binding.titleEt.error = "Enter Title"
+            binding.titleEt.requestFocus()
         }
         else if(description.isEmpty()){
             binding.priceEt.error = "Enter Description"
@@ -313,9 +318,11 @@ class AdCreateActivity : AppCompatActivity() {
         }
         else{
 
-            if (isEditMode){
+            if(isEditMode){
+
                 updateAd()
             }else{
+
                 postAd()
             }
         }
@@ -341,7 +348,7 @@ class AdCreateActivity : AppCompatActivity() {
         hashMap["title"] = "$title"
         hashMap["description"] = "$description"
         hashMap["status"] = "${Utils.AD_STATUS_AVAILABLE}"
-        hashMap["timestamp"] = "$timestamp"
+        hashMap["timestamp"] = timestamp
         hashMap["latitude"] = latitude
         hashMap["longitude"] = longitude
 
@@ -361,7 +368,7 @@ class AdCreateActivity : AppCompatActivity() {
     private fun updateAd(){
         Log.d(TAG, "updateAd: ")
 
-        progressDialog.setMessage("Updating Ad...")
+        progressDialog.setMessage("İlan Güncelleniyor...")
         progressDialog.show()
 
         val hashMap = HashMap<String, Any>()
@@ -380,7 +387,7 @@ class AdCreateActivity : AppCompatActivity() {
             .updateChildren(hashMap)
             .addOnSuccessListener {
 
-                Log.d(TAG,"updateAd: Ad Updated...")
+                Log.d(TAG,"updateAd: İlan Güncellendi...")
                 progressDialog.dismiss()
                 uploadImagesStorage(adIdForEditing)
             }
@@ -398,8 +405,7 @@ class AdCreateActivity : AppCompatActivity() {
 
             val modelImagePicked = imagesPickedArrayList[i]
 
-            if (modelImagePicked.fromInternet){
-
+            if (!modelImagePicked.fromInternet){
                 val imageName = modelImagePicked.id
 
                 val filePathAndName = "Ads/$imageName"
@@ -410,7 +416,7 @@ class AdCreateActivity : AppCompatActivity() {
                 storageReference.putFile(modelImagePicked.imageUri!!)
                     .addOnProgressListener { snapshot ->
 
-                        val progress = (100.0 * snapshot.bytesTransferred) / snapshot.totalByteCount
+                        val progress = 100.0 * snapshot.bytesTransferred / snapshot.totalByteCount
                         Log.d(TAG, "uploadImagesStorage: progress: $progress")
                         val message = "Uploading Images... $imageIndexForProgress of ${imagesPickedArrayList.size} images... Progress ${progress.toInt()}"
                         Log.d(TAG, "uploadImagesStorage: $message")
@@ -423,13 +429,13 @@ class AdCreateActivity : AppCompatActivity() {
 
                         val uriTask = taskSnapshot.storage.downloadUrl
                         while (!uriTask.isSuccessful);
-                        val uploadImageUrl = uriTask.result
+                        val uploadedImageUrl = uriTask.result
 
                         if (uriTask.isSuccessful){
 
                             val hashMap = HashMap<String, Any>()
                             hashMap["id"] = "${modelImagePicked.id}"
-                            hashMap["imageUrl"] = "$uploadImageUrl"
+                            hashMap["imageUrl"] = "$uploadedImageUrl"
 
                             val ref = FirebaseDatabase.getInstance().getReference("Ads")
                             ref.child(adId)
@@ -443,10 +449,12 @@ class AdCreateActivity : AppCompatActivity() {
                     .addOnFailureListener{ e ->
                         Log.e(TAG, "uploadImagesStorage: ", e)
                         progressDialog.dismiss()
-                        Utils.toast(this, "Failed to upload image due to ${e.message}")
+
 
                     }
+
             }
+
 
 
         }

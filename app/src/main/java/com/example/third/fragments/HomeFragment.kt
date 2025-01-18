@@ -92,11 +92,11 @@ class HomeFragment : Fragment() {
 
             }
         })
-            binding.locationCv.setOnClickListener{
-                val intent = Intent(mContext, LocationPickerActivity::class.java)
-                startActivity(intent)
+        binding.locationCv.setOnClickListener{
+            val intent = Intent(mContext, LocationPickerActivity::class.java)
+            startActivity(intent)
 
-            }
+        }
 
     }
 
@@ -139,28 +139,28 @@ class HomeFragment : Fragment() {
                 adArrylist.clear()
                 for (ds in snapshot.children) {
 
-                   try {
-                       val modelAd = ds.getValue(ModelAd::class.java)
-                       val distance = calculateDistanceKm(
-                           modelAd?.latitude ?: 0.0,
-                           modelAd?.longitude ?: 0.0
-                       )
-                       Log.d(TAG,"onDataChange: Distance: $distance")
+                    try {
+                        val modelAd = ds.getValue(ModelAd::class.java)
+                        val distance = calculateDistanceKm(
+                            modelAd?.latitude ?: 0.0,
+                            modelAd?.longitude ?: 0.0
+                        )
+                        Log.d(TAG,"onDataChange: Distance: $distance")
 
-                       if (category == "Hepsi"){
-                           if (distance <= MAX_DISTANCE_TO_lOAD_ADS_KM){
-                               adArrylist.add(modelAd!!)
-                           }
-                       }else{
-                           if(modelAd!!.category.equals(category) ){
-                               if (distance <= MAX_DISTANCE_TO_lOAD_ADS_KM){
-                                   adArrylist.add(modelAd!!)
-                               }
-                           }
-                       }
-                   }catch (e: Exception){
-                       Log.e(TAG, "onDataChange: ", e)
-                   }
+                        if (category == "Hepsi"){
+                            if (distance <= MAX_DISTANCE_TO_lOAD_ADS_KM){
+                                adArrylist.add(modelAd!!)
+                            }
+                        }else{
+                            if(modelAd!!.category.equals(category) ){
+                                if (distance <= MAX_DISTANCE_TO_lOAD_ADS_KM){
+                                    adArrylist.add(modelAd!!)
+                                }
+                            }
+                        }
+                    }catch (e: Exception){
+                        Log.e(TAG, "onDataChange: ", e)
+                    }
                 }
                 adapterAd = AdapterAd(mContext, adArrylist)
                 binding.adsRv.adapter = adapterAd

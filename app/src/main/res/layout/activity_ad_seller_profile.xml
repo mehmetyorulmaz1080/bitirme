@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
-            android:text="Seller Profile"/>
+            android:text="Satıcı Profili"/>
 
         <View
             android:layout_width="match_parent"
@@ -71,7 +71,7 @@
                 style="@style/TextAppearance.MaterialComponents.Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Member Since:"
+                android:text="Üyelik Tarihi: "
                 android:layout_toEndOf="@+id/sellerProfileIv"
                 android:layout_below="@+id/sellerNameTv"/>
 
@@ -100,7 +100,7 @@
         style="@style/TextAppearance.MaterialComponents.Subtitle1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Published Ads: "
+        android:text="Yayınlanan İlanlar: "
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:layout_below="@+id/view1"/>

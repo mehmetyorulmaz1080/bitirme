@@ -25,7 +25,7 @@
             android:id="@+id/toolbarTitleTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Login"
+            android:text="Giriş yap"
             android:layout_centerInParent="true"
             style="@style/TextAppearance.MaterialComponents.Body1"/>
 
@@ -58,7 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/profileIv"
-            android:text="Login To Your Account"
+            android:text="Hesabınıza Giriş Yapın"
             style="@style/TextAppearance.MaterialComponents.Subtitle1"
             android:layout_marginTop="10dp"
             android:layout_centerHorizontal="true"/>
@@ -98,7 +98,7 @@
             android:layout_height="wrap_content"
             app:passwordToggleEnabled="true"
             app:startIconDrawable="@drawable/ic_lock_white"
-            android:hint="Password">
+            android:hint="Şifre">
 
             <EditText
                 android:id="@+id/passwordEt"
@@ -114,7 +114,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/TextAppearance.MaterialComponents.Body2"
-            android:text="@string/not_have_account_register"
+            android:text="@string/hesab_n_z_yok_mu_kay_t_olun"
             android:layout_below="@id/passwordTil"
             android:layout_marginTop="5dp"
             tools:ignore="HardcodedText" />
@@ -124,7 +124,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/TextAppearance.MaterialComponents.Body2"
-            android:text="@string/forgot_password_recover"
+            android:text="@string/ifrenizi_mi_unuttunuz_yile_mek"
             android:layout_below="@+id/noAccountTv"
             android:layout_alignParentStart="true"
             android:layout_marginTop="5dp"/>
@@ -134,7 +134,7 @@
             android:id="@+id/loginBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Login"
+            android:text="Giriş Yapın"
             app:cornerRadius="8dp"
             android:layout_alignParentBottom="true"
             android:minHeight="@dimen/m_button_height"/>

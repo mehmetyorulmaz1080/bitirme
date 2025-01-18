@@ -147,8 +147,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun starLoginOptions() {
-        val intent = Intent(this, LoginOptionsActivity::class.java)
-        startActivity(intent)
+        startActivity(Intent(this, LoginOptionsActivity::class.java))
 
     }
 

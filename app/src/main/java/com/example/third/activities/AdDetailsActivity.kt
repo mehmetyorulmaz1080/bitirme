@@ -218,6 +218,7 @@ class AdDetailsActivity : AppCompatActivity() {
                         if (sellerUid == firebaseAuth.uid){
                             binding.toolbarEditBtn.visibility = View.VISIBLE
                             binding.toolbarDeleteBtn.visibility = View.VISIBLE
+
                             binding.chatBtn.visibility = View.GONE
                             binding.callBtn.visibility = View.GONE
                             binding.smsBtn.visibility = View.GONE
@@ -273,7 +274,7 @@ class AdDetailsActivity : AppCompatActivity() {
 
                     sellerPhone = "$phoneCode$phoneNumber"
 
-                    binding.sellerNameTv.text = sellerPhone
+                    binding.sellerNameTv.text = name
                     binding.memberSinceTv.text = formattedDate
 
                     try {
@@ -300,8 +301,11 @@ class AdDetailsActivity : AppCompatActivity() {
             .addValueEventListener(object: ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
 
+                    //buraya bi bak bakalım
+                    /*
                     favorite = snapshot.child(adId).exists()
                     Log.d(TAG, "onDataChange: favorite: $favorite")
+                     */
 
                     if (favorite){
                         binding.toolbarFavBtn.setImageResource(R.drawable.ic_fav_yes)

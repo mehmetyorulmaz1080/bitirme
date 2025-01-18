@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
 import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -21,6 +22,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
+
 class AdapterAd : RecyclerView.Adapter<AdapterAd.HolderAd>, Filterable {
 
     private lateinit var binding: RowAdBinding
@@ -30,7 +32,7 @@ class AdapterAd : RecyclerView.Adapter<AdapterAd.HolderAd>, Filterable {
     }
 
     private  var context: Context
-    var adArrylist: ArrayList<ModelAd>
+    var adArraylist: ArrayList<ModelAd>
     private var filterList: ArrayList<ModelAd>
 
     private var filter: FilterAd? = null
@@ -39,7 +41,7 @@ class AdapterAd : RecyclerView.Adapter<AdapterAd.HolderAd>, Filterable {
 
     constructor(context: Context, adArrylist: ArrayList<ModelAd>) {
         this.context = context
-        this.adArrylist = adArrylist
+        this.adArraylist = adArrylist
         this.filterList = adArrylist
 
         firebaseAuth = FirebaseAuth.getInstance()
@@ -54,7 +56,7 @@ class AdapterAd : RecyclerView.Adapter<AdapterAd.HolderAd>, Filterable {
 
     override fun onBindViewHolder(holder: HolderAd, position: Int) {
 
-        val modelAd = adArrylist[position]
+        val modelAd = adArraylist[position]
 
         val title = modelAd.title
         val description = modelAd.description
@@ -126,10 +128,12 @@ class AdapterAd : RecyclerView.Adapter<AdapterAd.HolderAd>, Filterable {
         val adId = modelAd.id
 
         Log.d(TAG, "loadAdFirstImage: AdId: $adId")
+
         val reference = FirebaseDatabase.getInstance().getReference("Ads")
         reference.child(adId).child("Images").limitToFirst(1)
             .addValueEventListener(object: ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
+
                     for (ds in snapshot.children) {
                         val imageUrl = "${ds.child("imageUrl").value}"
                         Log.d(TAG, "onDataChange: ImageUrl: $imageUrl")
@@ -153,11 +157,11 @@ class AdapterAd : RecyclerView.Adapter<AdapterAd.HolderAd>, Filterable {
     }
     override fun getItemCount(): Int {
 
-        return adArrylist.size
+        return adArraylist.size
     }
 
-    override fun getFilter(): android.widget.Filter {
-        if (filter == null) {
+    override fun getFilter(): Filter {
+        if (filter == null){
             filter = FilterAd(this, filterList)
         }
         return filter as FilterAd

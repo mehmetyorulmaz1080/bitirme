@@ -16,7 +16,7 @@
             android:id="@+id/toolbarTitleTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Home"
+            android:text="Anasayfa"
             android:layout_centerInParent="true"
             style="@style/TextAppearance.MaterialComponents.Body1"/>
 

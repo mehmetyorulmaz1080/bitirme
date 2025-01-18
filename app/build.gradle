@@ -64,6 +64,7 @@ dependencies {
     //noinspection UseTomlInstead
     implementation 'com.hbb20:ccp:2.7.0'
 
+
     implementation("com.github.bumptech.glide:glide:4.15")
     annotationProcessor("com.github.bumptech.glide:compiler:4.15.0")
 

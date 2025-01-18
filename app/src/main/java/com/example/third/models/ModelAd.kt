@@ -1,6 +1,6 @@
 package com.example.third.models
 
-class ModelAd {
+class  ModelAd {
     var id: String = ""
     var uid: String = ""
     var brand: String = ""

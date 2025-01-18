@@ -79,7 +79,7 @@
             android:layout_height="wrap_content"
             android:inputType="textMultiLine|textCapSentences"
             android:padding="10dp"
-            android:hint="Start typing..."
+            android:hint="Yazmaya başlayın..."
             android:layout_toStartOf="@+id/attachFab"
             android:background="@drawable/shape_edittext"/>
 

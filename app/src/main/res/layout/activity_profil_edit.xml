@@ -26,7 +26,7 @@
             android:id="@+id/toolbarTitleTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Edit Profile"
+            android:text="Profili Düzenle"
             android:layout_centerInParent="true"
             style="@style/TextAppearance.MaterialComponents.Body1"/>
 
@@ -81,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/profileRl"
                 android:layout_marginTop="10dp"
-                android:hint="Name"
+                android:hint="İsim"
                 app:startIconDrawable="@drawable/ic_person_gray"
                 app:boxCornerRadiusBottomStart="8dp"
                 app:boxCornerRadiusBottomEnd="8dp"
@@ -102,7 +102,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/nameTil"
-                android:hint="DOB (dd/mm/yyyy)"
+                android:hint="(dd/mm/yyyy)"
                 app:startIconDrawable="@drawable/ic_calendar_white"
                 app:boxCornerRadiusBottomStart="8dp"
                 app:boxCornerRadiusBottomEnd="8dp"
@@ -152,6 +152,7 @@
                     android:minWidth="60dp"
                     android:minHeight="56dp"
                     android:gravity="center"
+                    app:ccp_autoDetectCountry="true"
                     app:ccp_rememberLastSelection="true"
                     app:ccp_showFlag="false"
                     app:ccp_showNameCode="false"/>
@@ -162,7 +163,7 @@
                     android:layout_toEndOf="@+id/countryCodePicker"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Phone Number"
+                    android:hint="Telefon Numarası"
                     app:boxCornerRadiusTopStart="8dp"
                     app:boxCornerRadiusTopEnd="8dp"
                     app:boxCornerRadiusBottomStart="8dp"
@@ -183,7 +184,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/phoneInputRl"
-                android:text="Update"
+                android:text="Güncelle"
                 android:layout_marginTop="20dp"
                 app:cornerRadius="8dp"
                 android:minHeight="@dimen/m_button_height"/>

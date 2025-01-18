@@ -23,7 +23,7 @@
             android:drawableStart="@drawable/ic_location_gray"
             android:drawableEnd="@drawable/ic_next_gray"
             android:drawablePadding="10dp"
-            android:text="Choose Location"/>
+            android:text="Konum Seçin"/>
 
     </com.google.android.material.card.MaterialCardView>
 
@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_search_gray"
-            android:hint="Search"
+            android:hint="Ara"
             android:background="@android:color/transparent"
             android:padding="10dp"
             android:drawablePadding="10dp"/>
@@ -50,7 +50,7 @@
         style="@style/TextAppearance.MaterialComponents.Overline"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Browse Categories"
+        android:text="Kategorilere göz at"
         android:textStyle="bold"
         android:layout_marginStart="6dp"/>
 

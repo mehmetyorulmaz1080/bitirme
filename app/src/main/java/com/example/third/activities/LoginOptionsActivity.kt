@@ -30,8 +30,7 @@ class LoginOptionsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginOptionsBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+        setContentView(binding.root)
 
         progressDialog = ProgressDialog(this)
         progressDialog.setTitle("Please wait...")
@@ -48,15 +47,11 @@ class LoginOptionsActivity : AppCompatActivity() {
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
         binding.closeBtn.setOnClickListener{
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-
+            onBackPressed()
         }
 
         binding.loginEmailBtn.setOnClickListener {
-           val intent = Intent(this, LoginEmailActivity::class.java)
-            startActivity(intent)
-
+            startActivity(Intent(this, LoginEmailActivity::class.java))
         }
 
         binding.loginGoogleBtn.setOnClickListener {
@@ -78,8 +73,7 @@ class LoginOptionsActivity : AppCompatActivity() {
     }
 
     private val googleSignInArl = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()){
-        result ->
+        ActivityResultContracts.StartActivityForResult()){ result ->
         Log.d(TAG, "googleSignInArl: ")
 
         if (result.resultCode == RESULT_OK){
@@ -91,9 +85,10 @@ class LoginOptionsActivity : AppCompatActivity() {
             try {
                 val account = task.getResult(ApiException::class.java)
                 Log.d(TAG, "googleSignInArl: Account ID: ${account.id}")
+
                 firebaseAuthWithGoogleAccount(account.idToken)
-            } catch (e: ApiException) {
-                Log.e(TAG, "googleSignInArl: Error Code: ${e.statusCode}")
+            } catch (e: Exception) {
+                Log.e(TAG, "googleSignInArl:", e)
                 Utils.toast(this, "Error: ${e.message}")
             }
 
@@ -135,7 +130,7 @@ class LoginOptionsActivity : AppCompatActivity() {
         progressDialog.show()
 
         val timestamp = Utils.getTimestamp()
-        val registerUserEmail = firebaseAuth.currentUser?.email
+        val registeredUserEmail = firebaseAuth.currentUser?.email
         val registeredUserUid = firebaseAuth.uid
         val name = firebaseAuth.currentUser?.displayName
 
@@ -149,7 +144,7 @@ class LoginOptionsActivity : AppCompatActivity() {
         hashMap["typingTo"] = ""
         hashMap["timestamp"] = timestamp
         hashMap["onlineStatus"] = true
-        hashMap["email"] = registerUserEmail
+        hashMap["email"] = registeredUserEmail
         hashMap["uid"] = registeredUserUid
 
         val ref = FirebaseDatabase.getInstance().getReference("Users")
@@ -158,6 +153,7 @@ class LoginOptionsActivity : AppCompatActivity() {
             .addOnSuccessListener {
                 Log.d(TAG, "updateUserInfoDb: User info saved...")
                 progressDialog.dismiss()
+
                 startActivity(Intent(this, MainActivity::class.java))
                 finishAffinity()
             }

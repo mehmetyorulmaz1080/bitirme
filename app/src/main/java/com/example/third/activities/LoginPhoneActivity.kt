@@ -16,6 +16,7 @@ import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.auth.PhoneAuthProvider.ForceResendingToken
 import com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCallbacks
 import com.google.firebase.database.FirebaseDatabase
+import java.util.concurrent.TimeUnit
 
 class LoginPhoneActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginPhoneBinding
@@ -32,14 +33,13 @@ class LoginPhoneActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginPhoneBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+        setContentView(binding.root)
 
         binding.phoneInputRl.visibility = View.VISIBLE
         binding.otpInputRl.visibility = View.GONE
 
         progressDialog = ProgressDialog(this)
-        progressDialog.setTitle("Please wait...")
+        progressDialog.setTitle("Lütfen Bekleyin...")
         progressDialog.setCanceledOnTouchOutside(false)
 
         firebaseAuth = FirebaseAuth.getInstance()
@@ -93,8 +93,8 @@ class LoginPhoneActivity : AppCompatActivity() {
         Log.d(TAG, "validateData: phoneNumberWithCode: $phoneNumberWithCode")
 
         if(phoneNumber.isEmpty()){
-           binding.phoneNumberEt.error = "Enter phone number"
-            binding.phoneNumberEt.requestFocus()
+           binding.phoneNumberEt.error = "Telefon numaranızı girin"
+           binding.phoneNumberEt.requestFocus()
         }else{
             startPhoneNumberVerification()
         }
@@ -102,14 +102,15 @@ class LoginPhoneActivity : AppCompatActivity() {
 
     private fun startPhoneNumberVerification(){
         Log.d(TAG, "startPhoneNumberVerification: ")
-        progressDialog.setMessage("Sending OTP to $phoneNumberWithCode")
+        progressDialog.setMessage("Kod gönderiliyor $phoneNumberWithCode")
         progressDialog.show()
         val options = PhoneAuthOptions.newBuilder(firebaseAuth)
             .setPhoneNumber(phoneNumberWithCode)
-            .setTimeout(60L, java.util.concurrent.TimeUnit.SECONDS)
+            .setTimeout(60L, TimeUnit.SECONDS)
             .setActivity(this)
             .setCallbacks(mCallbacks)
-        PhoneAuthProvider.verifyPhoneNumber(options.build())
+            .build()
+        PhoneAuthProvider.verifyPhoneNumber(options)
     }
 
     private fun phoneLoginCallBacks(){
@@ -145,9 +146,9 @@ class LoginPhoneActivity : AppCompatActivity() {
                 binding.phoneInputRl.visibility = View.GONE
                 binding.otpInputRl.visibility = View.VISIBLE
 
-                Utils.toast(this@LoginPhoneActivity, "OTP is sent to $phoneNumberWithCode")
+                Utils.toast(this@LoginPhoneActivity, "Kod şuraya gönderiliyor:$phoneNumberWithCode")
 
-                binding.resendOtpTv.text = "Please type the verification code we sent to $phoneNumberWithCode"
+                binding.loginLabelTv.text = "Lütfen gönderdiğimiz doğrulama kodunu yazın $phoneNumberWithCode"
             }
 
             override fun onCodeAutoRetrievalTimeOut(p0: String) {
@@ -157,9 +158,12 @@ class LoginPhoneActivity : AppCompatActivity() {
     }
 
     private fun verifyPhoneNumberWithCode(verificationId: String?, otp: String) {
-        Log.d(TAG, "verifyPhoneNumberWithCode: $verificationId $otp")
+        Log.d(TAG, "verifyPhoneNumberWithCode: verificationId: $verificationId")
+        Log.d(TAG, "verifyPhoneNumberWithCode: otp: $otp")
+
         progressDialog.setMessage("Verifying OTP")
         progressDialog.show()
+
         val credential = PhoneAuthProvider.getCredential(verificationId!!, otp)
         signInWithPhoneAuthCredential(credential)
     }
@@ -171,10 +175,9 @@ class LoginPhoneActivity : AppCompatActivity() {
         progressDialog.show()
         val options = PhoneAuthOptions.newBuilder(firebaseAuth)
             .setPhoneNumber(phoneNumberWithCode)
-            .setTimeout(60L, java.util.concurrent.TimeUnit.SECONDS)
+            .setTimeout(60L,TimeUnit.SECONDS)
             .setActivity(this)
             .setCallbacks(mCallbacks)
-            .setForceResendingToken(token!!)
             .build()
         PhoneAuthProvider.verifyPhoneNumber(options)
 
@@ -235,6 +238,7 @@ class LoginPhoneActivity : AppCompatActivity() {
             .addOnSuccessListener {
                 Log.d(TAG, "updateUserInfoDb: User info saved...")
                 progressDialog.dismiss()
+
                 startActivity(Intent(this, MainActivity::class.java))
                 finishAffinity()
             }

@@ -25,7 +25,7 @@
             android:id="@+id/toolbarTitleTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pick Location"
+            android:text="Konum Seç"
             android:layout_centerInParent="true"
             style="@style/TextAppearance.MaterialComponents.Body1"/>
 
@@ -96,7 +96,7 @@
             android:id="@+id/doneBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Done"
+            android:text="Tamam"
             app:cornerRadius="8dp"
             android:minHeight="@dimen/m_button_height"/>
     </LinearLayout>

@@ -41,7 +41,7 @@ class AdapterCategory (
 
         holder.categoryIconIv.setImageResource(icon)
         holder.categoryTv.text = category
-        holder.categoryTv.setTextColor(color)
+        holder.categoryIconIv.setBackgroundColor(color)
 
         holder.itemView.setOnClickListener {
             rvListenerCategory.onCategoryClick(modelCategory)

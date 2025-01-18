@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
                 android:minHeight="@dimen/m_button_height"
-                android:text="Continue With Google"
+                android:text="Google ile Devam Et"
                 app:cornerRadius="8dp"
                 app:icon="@drawable/google" />
 
@@ -48,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="@dimen/m_button_height"
-                android:text="Continue With Phone"
+                android:text="Telefon ile Devam Et"
                 app:cornerRadius="8dp"
                 app:icon="@drawable/ic_call_white" />
 
@@ -57,7 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:minHeight="@dimen/m_button_height"
-                android:text="Continue With Email"
+                android:text="E-posta ile Devam Et"
                 app:cornerRadius="8dp"
                 app:icon="@drawable/ic_email_white" />
 

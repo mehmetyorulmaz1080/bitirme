@@ -26,7 +26,7 @@
             style="@style/TextAppearance.MaterialComponents.Body1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ad Details"
+            android:text="İlan Detayları"
             android:layout_centerInParent="true"/>
 
         <ImageButton
@@ -86,7 +86,7 @@
                 android:id="@+id/priceSymbolTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/price_symbol"
+                android:text="TL"
                 android:layout_below="@+id/imageSliderVp"
                 style="@style/TextAppearance.MaterialComponents.Body1"/>
 
@@ -104,7 +104,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/TextAppearance.MaterialComponents.Overline"
-                android:text="New"
+                android:text="Yeni"
                 android:layout_below="@id/imageSliderVp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="4dp"
@@ -123,7 +123,7 @@
                 android:id="@+id/categoryLabelTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Category"
+                android:text="Kategori"
                 android:layout_below="@+id/dateTv"
                 android:layout_marginTop="10dp"
                 style="@style/TextAppearance.MaterialComponents.Headline6"/>
@@ -141,7 +141,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/TextAppearance.MaterialComponents.Headline6"
-                android:text="Title"
+                android:text="Başlık"
                 android:layout_marginTop="10dp"
                 android:layout_below="@+id/categoryTv"/>
 
@@ -159,7 +159,7 @@
                 android:layout_height="wrap_content"
                 style="@style/TextAppearance.MaterialComponents.Headline6"
                 android:layout_below="@+id/titleTv"
-                android:text="Description"
+                android:text="Tanım"
                 android:layout_marginTop="10dp"/>
 
             <TextView
@@ -175,7 +175,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/descriptionTv"
-                android:text="Address"
+                android:text="Adres"
                 style="@style/TextAppearance.MaterialComponents.Headline6"
                 android:layout_marginTop="10dp"/>
 
@@ -193,7 +193,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/addressTv"
-                android:text="Seller Description"
+                android:text="Satıcı Açıklaması"
                 android:layout_marginTop="10dp"/>
 
             <com.google.android.material.card.MaterialCardView
@@ -231,7 +231,7 @@
                         style="@style/TextAppearance.MaterialComponents.Caption"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Member Since "
+                        android:text="Üyelik Tarihi "
                         android:layout_below="@+id/sellerNameTv"
                         android:layout_toEndOf="@+id/sellerProfileIv"/>
 
@@ -267,7 +267,7 @@
             android:layout_weight="1"
             android:layout_marginEnd="2dp"
             android:textSize="10sp"
-            android:text="CHAT"
+            android:text="SOHBET"
             app:cornerRadius="8dp"
             app:icon="@drawable/ic_chat_white"
             android:minHeight="@dimen/m_button_height"/>
@@ -279,7 +279,7 @@
             android:layout_weight="1"
             android:layout_marginEnd="2dp"
             android:textSize="10sp"
-            android:text="CALL"
+            android:text="ARAMA"
             app:cornerRadius="8dp"
             app:icon="@drawable/ic_call_white"
             android:minHeight="@dimen/m_button_height"/>
@@ -303,7 +303,7 @@
             android:layout_weight="1"
             android:layout_marginEnd="2dp"
             android:textSize="10sp"
-            android:text="MAP"
+            android:text="HARİTA"
             app:cornerRadius="8dp"
             app:icon="@drawable/ic_location_white"
             android:minHeight="@dimen/m_button_height"/>

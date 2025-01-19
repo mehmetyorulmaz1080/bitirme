@@ -78,26 +78,26 @@
             android:textSize="12sp"/>
 
         <TextView
-            android:id="@+id/priceSymbolTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/TextAppearance.MaterialComponents.Caption"
-            android:layout_below="@+id/addressTv"
-            android:layout_toEndOf="@+id/conditionTv"
-            android:text="TL"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="2dp"
-            android:textSize="12sp"/>
-
-        <TextView
             android:id="@+id/priceTv"
             style="@style/TextAppearance.MaterialComponents.Caption"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/addressTv"
-            android:layout_toEndOf="@+id/priceSymbolTv"
             android:text="0.00"
+            android:layout_toEndOf="@+id/conditionTv"
             android:layout_marginTop="4dp"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/priceSymbolTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TextAppearance.MaterialComponents.Caption"
+            android:layout_below="@+id/addressTv"
+            android:text=" TL"
+            android:layout_toEndOf="@+id/priceTv"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="2dp"
             android:textSize="12sp"/>
 
         <TextView

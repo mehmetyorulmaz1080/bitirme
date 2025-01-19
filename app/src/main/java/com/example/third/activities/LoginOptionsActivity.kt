@@ -33,7 +33,7 @@ class LoginOptionsActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         progressDialog = ProgressDialog(this)
-        progressDialog.setTitle("Please wait...")
+        progressDialog.setTitle("Lütfen bekleyin...")
         progressDialog.setCanceledOnTouchOutside(false)
 
         firebaseAuth = FirebaseAuth.getInstance()
@@ -46,16 +46,14 @@ class LoginOptionsActivity : AppCompatActivity() {
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        binding.closeBtn.setOnClickListener{
-            onBackPressed()
-        }
+
 
         binding.loginEmailBtn.setOnClickListener {
             startActivity(Intent(this, LoginEmailActivity::class.java))
         }
 
         binding.loginGoogleBtn.setOnClickListener {
-            beginGoogleLogin()
+            googleGirişiniBaşlat()
         }
 
         binding.loginPhoneBtn.setOnClickListener{
@@ -65,16 +63,16 @@ class LoginOptionsActivity : AppCompatActivity() {
 
     }
 
-    private fun beginGoogleLogin(){
-        Log.d(TAG, "beginGoogleLogin:")
+    private fun googleGirişiniBaşlat(){
+        Log.d(TAG, "googleGirişiniBaşlat:")
 
         val googleSignInIntent = mGoogleSignInClient.signInIntent
-        googleSignInArl.launch(googleSignInIntent)
+        googleOturumAç.launch(googleSignInIntent)
     }
 
-    private val googleSignInArl = registerForActivityResult(
+    private val googleOturumAç = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()){ result ->
-        Log.d(TAG, "googleSignInArl: ")
+        Log.d(TAG, "googleOturumAç: ")
 
         if (result.resultCode == RESULT_OK){
 
@@ -84,11 +82,11 @@ class LoginOptionsActivity : AppCompatActivity() {
 
             try {
                 val account = task.getResult(ApiException::class.java)
-                Log.d(TAG, "googleSignInArl: Account ID: ${account.id}")
+                Log.d(TAG, "googleOturumAç: Account ID: ${account.id}")
 
-                firebaseAuthWithGoogleAccount(account.idToken)
+                googleHesabıileFirebaseKimlikDoğrulaması(account.idToken)
             } catch (e: Exception) {
-                Log.e(TAG, "googleSignInArl:", e)
+                Log.e(TAG, "googleOturumAç:", e)
                 Utils.toast(this, "Error: ${e.message}")
             }
 
@@ -97,8 +95,8 @@ class LoginOptionsActivity : AppCompatActivity() {
             Utils.toast(this, "Cancelled...")
         }
     }
-    private fun firebaseAuthWithGoogleAccount(idToken: String?) {
-        Log.d(TAG, "firebaseWithGoogleAccount: idToken: $idToken")
+    private fun googleHesabıileFirebaseKimlikDoğrulaması(idToken: String?) {
+        Log.d(TAG, "googleHesabıileFirebaseKimlikDoğrulaması: idToken: $idToken")
 
         val credential = GoogleAuthProvider.getCredential(idToken, null)
 
@@ -106,27 +104,27 @@ class LoginOptionsActivity : AppCompatActivity() {
             .addOnSuccessListener { authResult ->
 
                 if (authResult.additionalUserInfo!!.isNewUser){
-                    Log.d(TAG, "firebaseAuthWithGoogleAccount: New User, Account created...")
+                    Log.d(TAG, "googleHesabıileFirebaseKimlikDoğrulaması: Yeni Kullanıcı, Hesap oluşturuldu...")
 
-                    updateUserInfoDb()
+                    kullanıcıBilgisiVeritabanınıGüncelle()
                 }
                 else{
-                    Log.d(TAG, "firebaseAuthWithGoogleAccount: Existing User, Logged In...")
+                    Log.d(TAG, "googleHesabıileFirebaseKimlikDoğrulaması: Mevcut Kullanıcı, Giriş Yapıldı...")
                     startActivity(Intent(this, MainActivity::class.java))
                     finishAffinity()
                 }
 
             }
             .addOnFailureListener { e ->
-                Log.e(TAG, "firebaseAuthWithGoogleAccount: ", e)
+                Log.e(TAG, "googleHesabıileFirebaseKimlikDoğrulaması: ", e)
                 Utils.toast(this, "${e.message}")
             }
     }
 
-    private fun updateUserInfoDb(){
-        Log.d(TAG, "updateUserInfoDb: ")
+    private fun kullanıcıBilgisiVeritabanınıGüncelle(){
+        Log.d(TAG, "kullanıcıBilgisiVeritabanınıGüncelle: ")
 
-        progressDialog.setMessage("Saving User Info")
+        progressDialog.setMessage("Kullanıcı Bilgilerini Kaydetme")
         progressDialog.show()
 
         val timestamp = Utils.getTimestamp()
@@ -151,7 +149,7 @@ class LoginOptionsActivity : AppCompatActivity() {
         ref.child(registeredUserUid!!)
             .setValue(hashMap)
             .addOnSuccessListener {
-                Log.d(TAG, "updateUserInfoDb: User info saved...")
+                Log.d(TAG, "kullanıcıBilgisiVeritabanınıGüncelle: Kullanıcı bilgileri kaydedildi...")
                 progressDialog.dismiss()
 
                 startActivity(Intent(this, MainActivity::class.java))
@@ -159,8 +157,8 @@ class LoginOptionsActivity : AppCompatActivity() {
             }
             .addOnFailureListener { e ->
                 progressDialog.dismiss()
-                Log.e(TAG, "updateUserInfoDb: ", e)
-                Utils.toast(this, "Failed to save user info due to ${e.message}")
+                Log.e(TAG, "kullanıcıBilgisiVeritabanınıGüncelle: ", e)
+                Utils.toast(this, "Nedeniyle kullanıcı bilgileri kaydedilemedi ${e.message}")
             }
 
     }

@@ -77,28 +77,28 @@ class ChatActivity : AppCompatActivity() {
 
         myUid = firebaseAuth.uid!!
 
-        chatPath = Utils.chatPath(receiptUid,myUid)
+        chatPath = Utils.sohbetYolu(receiptUid,myUid)
 
-        loadMyInfo()
-        loadReceiptDetails()
-        loadMessages()
+        bilgilerimiYükle()
+        yükleAlındıDetayları()
+        yükleMesajları()
 
         binding.toolbarBackBtn.setOnClickListener {
             finish()
         }
 
         binding.attachFab.setOnClickListener {
-            imagePickDialog()
+            iletişimKutusuResimSeçimi()
         }
 
         binding.sendFab.setOnClickListener{
-            validateData()
+            doğrulamaVerileri()
         }
 
     }
 
-    private fun loadMyInfo(){
-        Log.d(TAG, "loadMyInfo: ")
+    private fun bilgilerimiYükle(){
+        Log.d(TAG, "bilgilerimiYükle: ")
 
         val ref = FirebaseDatabase.getInstance().getReference("Users")
         ref.child("${firebaseAuth.uid}")
@@ -114,8 +114,8 @@ class ChatActivity : AppCompatActivity() {
             })
     }
 
-    private fun loadReceiptDetails(){
-        Log.d(TAG, "loadReceiptDetails: ")
+    private fun yükleAlındıDetayları(){
+        Log.d(TAG, "yükleAlındıDetayları: ")
 
         val ref = FirebaseDatabase.getInstance().getReference("Users")
         ref.child(receiptUid)
@@ -127,9 +127,9 @@ class ChatActivity : AppCompatActivity() {
                         val name = "${snapshot.child("name").value}"
                         val profileImageUrl = "${snapshot.child("profileImageUrl").value}"
                         receiptFcmToken = "${snapshot.child("fcmToken").value}"
-                        Log.d(TAG, "onDataChange: name: $name")
-                        Log.d(TAG, "onDataChange: profileImageUrl: $profileImageUrl")
-                        Log.d(TAG, "onDataChange: receiptFcmToken: $receiptFcmToken")
+                        Log.d(TAG, "VeriDeğişikliğiHakkında: name: $name")
+                        Log.d(TAG, "VeriDeğişikliğiHakkında: profileImageUrl: $profileImageUrl")
+                        Log.d(TAG, "VeriDeğişikliğiHakkında: receiptFcmToken: $receiptFcmToken")
 
                         binding.toolbarTitleTv.text = name
 
@@ -140,10 +140,10 @@ class ChatActivity : AppCompatActivity() {
                                 .into(binding.toolbarProfileIv)
 
                         }catch (e:Exception) {
-                            Log.e(TAG,"onDataChange: ",e)
+                            Log.e(TAG,"VeriDeğişikliğiHakkında: ",e)
                         }
                     }catch (e:Exception){
-                        Log.e(TAG,"onDataChange: ",e)
+                        Log.e(TAG,"VeriDeğişikliğiHakkında: ",e)
                     }
                 }
                 override fun onCancelled(error: DatabaseError) {
@@ -152,7 +152,7 @@ class ChatActivity : AppCompatActivity() {
             })
     }
 
-    private fun loadMessages(){
+    private fun yükleMesajları(){
         val messageArrayList = ArrayList<ModelChat>()
 
         val ref = FirebaseDatabase.getInstance().getReference("Chats")
@@ -167,7 +167,7 @@ class ChatActivity : AppCompatActivity() {
 
                             messageArrayList.add(modelChat!!)
                         }catch (e:Exception){
-                            Log.e(TAG,"onDataChange: ",e)
+                            Log.e(TAG,"VeriDeğişikliğiHakkında: ",e)
                         }
                     }
                     val adapterChat = AdapterChat(this@ChatActivity, messageArrayList)
@@ -179,13 +179,13 @@ class ChatActivity : AppCompatActivity() {
                 }
             })
     }
-    private fun imagePickDialog(){
-        Log.d(TAG, "imagePickDialog: ")
+    private fun iletişimKutusuResimSeçimi(){
+        Log.d(TAG, "iletişimKutusuResimSeçimi: ")
 
         val popupMenu = PopupMenu(this, binding.attachFab)
 
-        popupMenu.menu.add(Menu.NONE,1,1,"Camera")
-        popupMenu.menu.add(Menu.NONE,2,2,"Gallery")
+        popupMenu.menu.add(Menu.NONE,1,1,"Kamera")
+        popupMenu.menu.add(Menu.NONE,2,2,"Galeri")
 
         popupMenu.show()
 
@@ -197,17 +197,17 @@ class ChatActivity : AppCompatActivity() {
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
 
-                    requestCameraPermissions.launch(arrayOf(android.Manifest.permission.CAMERA))
+                    istekKameraİzinleri.launch(arrayOf(android.Manifest.permission.CAMERA))
                 }else{
-                    requestCameraPermissions.launch(arrayOf(android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                    istekKameraİzinleri.launch(arrayOf(android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE))
                 }
 
             }else if(itemId == 2){
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
-                    pickImageGallery()
+                    resimGalerisiniSeç()
                 }else{
-                    requestStoragePermissions.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    depolamaİzinleriİsteyin.launch(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 }
 
             }
@@ -216,43 +216,43 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 
-    private val requestCameraPermissions = registerForActivityResult(
+    private val istekKameraİzinleri = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
-    ){ result ->
+    ){ sonuc ->
 
-        Log.d(TAG, "requestCameraPermissions: $result")
+        Log.d(TAG, "istekKameraİzinleri: $sonuc")
 
-        var areAllGranted = true
+        var hepsiVerildi = true
 
-        for (isGranted in result.values){
-            areAllGranted = areAllGranted && isGranted
+        for (izinVerildi in sonuc.values){
+            hepsiVerildi = hepsiVerildi && izinVerildi
         }
-        if (areAllGranted){
-            Log.d(TAG, "requestCameraPermissions: granted")
+        if (hepsiVerildi){
+            Log.d(TAG, "istekKameraİzinleri: verildi ")
 
-            pickImageCamera()
+            resimKamerasınıSeç()
         }else{
-            Log.d(TAG, "requestCameraPermissions: denied")
-            Utils.toast(this, "Please grant all permissions")
+            Log.d(TAG, "istekKameraİzinleri: reddedildi ")
+            Utils.toast(this, "Lütfen tüm izinleri verin")
         }
     }
 
 
-    private val requestStoragePermissions = registerForActivityResult(
+    private val depolamaİzinleriİsteyin = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        Log.d(TAG, "requestStoragePermissions: $isGranted")
+    ) { izinVerildi ->
+        Log.d(TAG, "depolamaİzinleriİsteyin: $izinVerildi")
 
-        if (isGranted) {
-            pickImageGallery()
+        if (izinVerildi) {
+            resimGalerisiniSeç()
         }
         else{
-            Utils.toast(this, "Please grant all permissions")
+            Utils.toast(this, "Lütfen tüm izinleri verin")
         }
     }
 
-    private fun pickImageCamera(){
-        Log.d(TAG, "pickImageCamera: ")
+    private fun resimKamerasınıSeç(){
+        Log.d(TAG, "resimKamerasınıSeç: ")
 
         val contentValues = ContentValues()
         contentValues.put(MediaStore.Images.Media.TITLE, "THE_IMAGE_TITLE")
@@ -261,50 +261,50 @@ class ChatActivity : AppCompatActivity() {
 
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
-        cameraActivityResultLauncher.launch(intent)
+        kameraAktiviteSonuçBaşlatıcı.launch(intent)
 
     }
-    private val cameraActivityResultLauncher = registerForActivityResult(
+    private val kameraAktiviteSonuçBaşlatıcı = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ){ result ->
         if (result.resultCode == Activity.RESULT_OK){
-            Log.d(TAG, "cameraActivityResultLauncher: imageUri: $imageUri")
-            uploadFirebaseStorage()
+            Log.d(TAG, "kameraAktiviteSonuçBaşlatıcı: imageUri: $imageUri")
+            FirebaseStorageyükle()
     }else{
-        Utils.toast(this, "Cancelled")
+        Utils.toast(this, "İptal edildi")
         }
     }
 
-    private fun pickImageGallery(){
-        Log.d(TAG,"pickImageGallery: ")
+    private fun resimGalerisiniSeç(){
+        Log.d(TAG,"resimGalerisiniSeç: ")
 
         val intent = Intent(Intent.ACTION_PICK)
 
         intent.type = "image/*"
-        galleryActivityResultLauncher.launch(intent)
+        galeriAktiviteSonuçBaşlatıcı.launch(intent)
     }
 
-    private val galleryActivityResultLauncher = registerForActivityResult(
+    private val  galeriAktiviteSonuçBaşlatıcı = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
-    ){result ->
-        if (result.resultCode == Activity.RESULT_OK){
+    ){sonuc ->
+        if (sonuc.resultCode == Activity.RESULT_OK){
 
-            val data = result.data
+            val data = sonuc.data
 
             imageUri = data!!.data
-            Log.d(TAG, "galleryActivityResultLauncher: imageUri: $imageUri")
+            Log.d(TAG, "galeriAktiviteSonuçBaşlatıcı: imageUri: $imageUri")
 
-            uploadFirebaseStorage()
+            FirebaseStorageyükle()
         }else{
-            Utils.toast(this, "Cancelled")
+            Utils.toast(this, "İptal edildi")
         }
 
     }
 
-    private fun uploadFirebaseStorage(){
-        Log.d(TAG, "uploadFirebaseStorage: ")
+    private fun FirebaseStorageyükle(){
+        Log.d(TAG, "FirebaseStorageyükle: ")
 
-        progressDialog.setMessage("Uploading image...")
+        progressDialog.setMessage("Resim yükleniyor...")
         progressDialog.show()
 
         val timestamp = Utils.getTimestamp()
@@ -316,7 +316,7 @@ class ChatActivity : AppCompatActivity() {
             .addOnProgressListener { snapshot ->
 
                 val progress = 100.0*snapshot.bytesTransferred/snapshot.totalByteCount
-                progressDialog.setMessage("Uploading image: Progress ${progress.toUInt()} %")
+                progressDialog.setMessage("Resim yükleniyor: Yüzde ${progress.toUInt()} %")
             }
             .addOnSuccessListener { taskSnapshot ->
 
@@ -325,37 +325,37 @@ class ChatActivity : AppCompatActivity() {
                 val uploadImageUrl = uriTask.result.toString()
 
                 if (uriTask.isSuccessful){
-                    sendMessage(Utils.MESSAGE_TYPE_IMAGE, uploadImageUrl, timestamp)
+                    mesajGönder(Utils.MESSAGE_TYPE_IMAGE, uploadImageUrl, timestamp)
                 }
 
             }
             .addOnFailureListener{e ->
                 progressDialog.dismiss()
-                Log.e(TAG,"uploadToFirebaseStorage: ", e)
-                Utils.toast(this, "Failed to upload due to ${e.message}")
+                Log.e(TAG,"FirebaseStorageyükle: ", e)
+                Utils.toast(this, "Nedeniyle yüklenemedi ${e.message}")
             }
     }
 
-    private fun validateData(){
-        Log.d(TAG,"validateData:")
+    private fun doğrulamaVerileri(){
+        Log.d(TAG,"doğrulamaVerileri:")
 
         val message = binding.messageEt.text.toString().trim()
         val timestamp = Utils.getTimestamp()
 
         if (message.isEmpty()){
-            Utils.toast(this,"Enter message to send...")
+            Utils.toast(this,"Gönderilecek mesajı girin...")
         }else{
-            sendMessage(Utils.MESSAGE_TYPE_TEXT,message, timestamp)
+            mesajGönder(Utils.MESSAGE_TYPE_TEXT,message, timestamp)
         }
     }
 
-    private fun sendMessage(messageType: String, message: String,  timestamp: Long){
+    private fun mesajGönder(messageType: String, message: String,  timestamp: Long){
 
-        Log.d(TAG, "sendMessage: messageType: $messageType")
-        Log.d(TAG, "sendMessage: message: $message")
-        Log.d(TAG, "sendMessage: timestamp: $timestamp")
+        Log.d(TAG, "mesajGönder: messageType: $messageType")
+        Log.d(TAG, "mesajGönder: message: $message")
+        Log.d(TAG, "mesajGönder: timestamp: $timestamp")
 
-        progressDialog.setMessage("Sending message...")
+        progressDialog.setMessage("Mesaj gönderiliyor...")
         progressDialog.show()
 
         val refChat = FirebaseDatabase.getInstance().getReference("Chats")
@@ -367,7 +367,6 @@ class ChatActivity : AppCompatActivity() {
         hashMap["messageType"] = "$messageType"
         hashMap["message"] = "$message"
         hashMap["fromUid"] = "$myUid"
-        //hashMap["senderUid"] = "$myUid"
         hashMap["toUid"] = "$receiptUid"
         hashMap["timestamp"] = timestamp
 
@@ -376,26 +375,26 @@ class ChatActivity : AppCompatActivity() {
             .child(keyId)
             .setValue(hashMap)
             .addOnSuccessListener {
-                Log.d(TAG,"sendMessage: message sent")
+                Log.d(TAG,"mesajGönder: mesaj gönderildi")
                 progressDialog.dismiss()
 
                 binding.messageEt.setText("")
 
                 if (messageType == Utils.MESSAGE_TYPE_TEXT) {
-                    prepareNotification(message)
+                    bildirimiHazırlama(message)
                 } else {
-                    prepareNotification("Sent an attachment")
+                    bildirimiHazırlama("Bir ek gönderildi")
                 }
             }
             .addOnFailureListener { e ->
-                Log.e(TAG,"sendMessage: ",e)
+                Log.e(TAG,"mesajGönder: ",e)
                 progressDialog.dismiss()
-                Utils.toast(this,"Failed to send message due to ${e.message}")
+                Utils.toast(this,"Nedeniyle mesaj gönderilemedi ${e.message}")
             }
     }
 
-    private fun prepareNotification(message: String){
-        Log.d(TAG,"prepareNotification: ")
+    private fun bildirimiHazırlama(message: String){
+        Log.d(TAG,"bildirimiHazırlama: ")
 
         val notificationJo = JSONObject()
         val notificationDataJo = JSONObject()
@@ -414,13 +413,13 @@ class ChatActivity : AppCompatActivity() {
             notificationJo.put("notification", notificationNotificationJo)
             notificationJo.put("data", notificationDataJo)
         } catch (e: Exception){
-            Log.e(TAG,"sendMessage: ",e)
+            Log.e(TAG,"mesajGönder: ",e)
         }
 
-        sendFcmNotification(notificationJo)
+        gönderFcmBildirimi(notificationJo)
     }
 
-    private fun sendFcmNotification(notificationJo: JSONObject){
+    private fun gönderFcmBildirimi(notificationJo: JSONObject){
 
         val jsonObjectRequest : JsonObjectRequest = object : JsonObjectRequest(
             Request.Method.POST,
@@ -428,10 +427,10 @@ class ChatActivity : AppCompatActivity() {
             notificationJo,
             Response.Listener {
 
-                Log.d(TAG, "sendFcmNotification: Notification Send $it")
+                Log.d(TAG, "gönderFcmBildirimi: Bildirim Gönder $it")
             },
             Response.ErrorListener { e ->
-                Log.e(TAG, "sendFcmNotification: ", e)
+                Log.e(TAG, "gönderFcmBildirimi: ", e)
             }
         ){
             override fun getHeaders(): MutableMap<String, String> {

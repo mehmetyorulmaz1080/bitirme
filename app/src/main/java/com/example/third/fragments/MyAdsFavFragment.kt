@@ -42,7 +42,7 @@ class MyAdsFavFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
+
         binding = FragmentMyAdsFavBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -52,7 +52,7 @@ class MyAdsFavFragment : Fragment() {
 
         firebaseAuth = FirebaseAuth.getInstance()
 
-        loadAds()
+        ilanlarıYükle()
 
         binding.searchEt.addTextChangedListener(object: TextWatcher{
 
@@ -75,8 +75,8 @@ class MyAdsFavFragment : Fragment() {
 
     }
 
-    private fun loadAds() {
-        Log.d(TAG, "loadAds")
+    private fun ilanlarıYükle() {
+        Log.d(TAG, "ilanlarıYükle")
 
         adArraylist = ArrayList()
 

@@ -98,7 +98,7 @@ class AdapterChats : RecyclerView.Adapter<AdapterChats.HolderChats>, Filterable 
                         val timestamp = ds.child("timestamp").value as Long ?: 0
                         val toUid = "${ds.child("toUid").value}"
 
-                        val formattedDate = Utils.formatTimestampDate(timestamp)
+                        val formattedDate = Utils.formatZamanDamgasiTarih(timestamp)
 
                         modelChats.message = message
                         modelChats.messageId = messageId

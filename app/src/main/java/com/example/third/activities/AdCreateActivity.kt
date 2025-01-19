@@ -50,20 +50,20 @@ class AdCreateActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         progressDialog = ProgressDialog(this)
-        progressDialog.setTitle("Please wait...")
+        progressDialog.setTitle("Lütfen bekleyin...")
         progressDialog.setCanceledOnTouchOutside(false)
 
         firebaseAuth = FirebaseAuth.getInstance()
 
         val adapterCategories = ArrayAdapter(this,
             R.layout.raw_category_act,
-            Utils.categories
+            Utils.kategoriler
         )
         binding.categoryAct.setAdapter(adapterCategories)
 
         val adapterCondition = ArrayAdapter(this,
             R.layout.row_condition_act,
-            Utils.condition
+            Utils.durum
         )
         binding.conditionAct.setAdapter(adapterCondition)
 
@@ -74,20 +74,20 @@ class AdCreateActivity : AppCompatActivity() {
 
             adIdForEditing = intent.getStringExtra("adId") ?: ""
 
-            loadAdDetails()
+            IlanAyrintilariniYukle()
 
-            binding.toolbarTitleTv.text = "Update Ad"
-            binding.postAdBtn.text = "Update Ad"
+            binding.toolbarTitleTv.text = "İlanı Güncelle"
+            binding.postAdBtn.text = "İlanı Güncelle"
 
         }else{
 
-            binding.toolbarTitleTv.text = "Create Ad"
-            binding.postAdBtn.text = "Post Ad"
+            binding.toolbarTitleTv.text = "İlan Oluştur"
+            binding.postAdBtn.text = "İlan ver"
         }
 
         imagesPickedArrayList = ArrayList()
 
-        loadImages()
+        ResimleriYükle()
 
         binding.toolbarBackBtn.setOnClickListener{
             onBackPressed()
@@ -95,20 +95,20 @@ class AdCreateActivity : AppCompatActivity() {
 
         binding.locationAct.setOnClickListener{
             val intent = Intent(this, LocationPickerActivity::class.java)
-            locationPickerActivityResultLauncher.launch(intent)
+            konumSeciciActivitySonucBaslatici.launch(intent)
         }
         binding.toolbarAdImageBtn.setOnClickListener{
-            showImagePickOptions()
+            ResimSecmeSecenekleriniGoster()
         }
 
         binding.postAdBtn.setOnClickListener{
-            validateData()
+            doğrulamaVerileri()
         }
     }
 
-    private val locationPickerActivityResultLauncher =
+    private val konumSeciciActivitySonucBaslatici =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()){result ->
-            Log.d(TAG, "locationPickerResultLauncher: ")
+            Log.d(TAG, "konumSeciciActivitySonucBaslatici: ")
 
             if(result.resultCode == Activity.RESULT_OK){
 
@@ -117,21 +117,21 @@ class AdCreateActivity : AppCompatActivity() {
                 if (data != null) {
                     latitude = data.getDoubleExtra("latitude", 0.0)
                     longitude = data.getDoubleExtra("longitude", 0.0)
-                    address = data.getStringExtra("address") ?: ""
+                    adres = data.getStringExtra("address") ?: ""
 
-                    Log.d(TAG, "locationPickerResultLauncher: latitude: $latitude")
-                    Log.d(TAG, "locationPickerResultLauncher: longitude: $longitude")
-                    Log.d(TAG, "locationPickerResultLauncher: address: $address")
+                    Log.d(TAG, "konumSeciciActivitySonucBaslatici: latitude: $latitude")
+                    Log.d(TAG, "konumSeciciActivitySonucBaslatici: longitude: $longitude")
+                    Log.d(TAG, "konumSeciciActivitySonucBaslatici: address: $adres")
 
-                    binding.locationAct.setText(address)
+                    binding.locationAct.setText(adres)
                 }
             }else{
-                Log.d(TAG, "locationPickerActivityResultLauncher: Cancelled")
-                Utils.toast(this, "Cancelled")
+                Log.d(TAG, "konumSeciciActivitySonucBaslatici: Cancelled")
+                Utils.toast(this, "İptal edildi")
             }
         }
 
-    private fun loadImages() {
+    private fun ResimleriYükle() {
         Log.d(TAG, "loadImages: ")
 
         adapterImagePicked = AdapterImagePicked(this, imagesPickedArrayList, adIdForEditing)
@@ -139,13 +139,13 @@ class AdCreateActivity : AppCompatActivity() {
         binding.imagesRv.adapter = adapterImagePicked
     }
 
-    private fun showImagePickOptions() {
-        Log.d(TAG, "showImagePickOptions: ")
+    private fun ResimSecmeSecenekleriniGoster() {
+        Log.d(TAG, "ResimSecmeSecenekleriniGoster: ")
 
         val popupMenu = PopupMenu(this, binding.toolbarAdImageBtn)
 
-        popupMenu.menu.add(Menu.NONE, 1, 1, "Camera")
-        popupMenu.menu.add(Menu.NONE, 2, 2, "Gallery")
+        popupMenu.menu.add(Menu.NONE, 1, 1, "Kamera")
+        popupMenu.menu.add(Menu.NONE, 2, 2, "Galeri")
 
         popupMenu.show()
 
@@ -158,21 +158,21 @@ class AdCreateActivity : AppCompatActivity() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 
                     val cameraPermission = arrayOf(Manifest.permission.CAMERA)
-                    requestCameraPermission.launch(cameraPermission)
+                    istekKameraIzni.launch(cameraPermission)
                 }
                 else{
                     val cameraPermission = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    requestCameraPermission.launch(cameraPermission)
+                    istekKameraIzni.launch(cameraPermission)
                 }
             }
             else if (itemId == 2){
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    pickImageGallery()
+                    ResimGalerisiniSec()
                 }
                 else{
                     val storagePermission = Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    requestStoragePermission.launch(storagePermission)
+                    istekDepolamaIzni.launch(storagePermission)
                 }
             }
             true
@@ -180,22 +180,22 @@ class AdCreateActivity : AppCompatActivity() {
         }
     }
 
-    private val requestStoragePermission = registerForActivityResult(
+    private val istekDepolamaIzni = registerForActivityResult(
         ActivityResultContracts.RequestPermission()) { isGranted ->
-        Log.d(TAG, "requestStoragePermission: isGranted: $isGranted")
+        Log.d(TAG, "istekDepolamaIzni: isGranted: $isGranted")
 
         if(isGranted){
-            pickImageGallery()
+            ResimGalerisiniSec()
         }
         else{
-            Utils.toast(this, "Storage Permission Denied")
+            Utils.toast(this, "Depolama İzni Reddedildi")
         }
 
     }
 
-    private val requestCameraPermission = registerForActivityResult(
+    private val istekKameraIzni = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()) { result ->
-        Log.d(TAG, "requestCameraPermission: result: $result")
+        Log.d(TAG, "istekKameraIzni: result: $result")
 
         var areAllGranted = true
         for(isGranted in result.values){
@@ -203,22 +203,22 @@ class AdCreateActivity : AppCompatActivity() {
         }
 
         if(areAllGranted){
-            pickImageCamera()
+            ResimKamerasiniSec()
         }
         else{
-            Utils.toast(this, "Camera or Storage or Both Permission Denied")
+            Utils.toast(this, "Kamera veya Depolama veya Her İkisinin İzinleri Reddedildi")
         }
     }
 
-    private fun pickImageGallery(){
-        Log.d(TAG, "pickImageGallery: ")
+    private fun ResimGalerisiniSec(){
+        Log.d(TAG, "ResimGalerisiniSec: ")
         val intent = Intent(Intent.ACTION_PICK)
         intent.type = "image/*"
-        galleryActivityResultLauncher.launch(intent)
+        galeriAktiviteSonucBaslatici.launch(intent)
     }
 
-    private fun pickImageCamera(){
-        Log.d(TAG,"pickImageCamera: ")
+    private fun ResimKamerasiniSec(){
+        Log.d(TAG,"ResimKamerasiniSec: ")
 
         val contentValues = ContentValues()
         contentValues.put(MediaStore.Images.Media.TITLE, "Temp_Image_Title")
@@ -229,19 +229,19 @@ class AdCreateActivity : AppCompatActivity() {
 
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
-        cameraActivityResultLauncher.launch(intent)
+        kameraAktiviteSonuçBaşlatıcı.launch(intent)
     }
 
-    private val galleryActivityResultLauncher = registerForActivityResult(
+    private val galeriAktiviteSonucBaslatici = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ){result ->
-        Log.d(TAG, "galleryActivityResultLauncher: ")
+        Log.d(TAG, "galeriAktiviteSonucBaslatici: ")
 
         if(result.resultCode == Activity.RESULT_OK) {
 
             val data = result.data
             imageUri = data!!.data
-            Log.d(TAG, "galleryActivityResultLauncher: imageUri: $imageUri")
+            Log.d(TAG, "galeriAktiviteSonucBaslatici: imageUri: $imageUri")
 
             val timestamp = "${Utils.getTimestamp()}"
 
@@ -249,87 +249,91 @@ class AdCreateActivity : AppCompatActivity() {
 
             imagesPickedArrayList.add(modelImagePicked)
 
-            loadImages()
+            ResimleriYükle()
         }
         else{
-            Utils.toast(this, "Cancelled")
+            Utils.toast(this, "İptal edildi")
         }
 
     }
 
-    private val cameraActivityResultLauncher = registerForActivityResult(
+    private val kameraAktiviteSonuçBaşlatıcı = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ){result ->
-        Log.d(TAG, "cameraActivityResultLauncher: ")
+        Log.d(TAG, "kameraAktiviteSonuçBaşlatıcı: ")
 
         if(result.resultCode == Activity.RESULT_OK) {
-            Log.d(TAG, "cameraActivityResultLauncher: imageUri: $imageUri")
+            Log.d(TAG, "kameraAktiviteSonuçBaşlatıcı: imageUri: $imageUri")
             val timestamp = "${Utils.getTimestamp()}"
             val modelImagePicked = ModelImagePicked(timestamp, imageUri, null, false)
             imagesPickedArrayList.add(modelImagePicked)
-            loadImages()
+            ResimleriYükle()
         }
         else{
-            Utils.toast(this, "Cancelled")
+            Utils.toast(this, "İptal edildi")
         }
     }
 
-    private var brand = ""
-    private var category = ""
-    private var condition = ""
-    private var address = ""
-    private var price = ""
-    private var title = ""
-    private var description = ""
+    private var marka = ""
+    private var kategori = ""
+    private var durum = ""
+    private var adres = ""
+    private var fiyat = ""
+    private var baslik = ""
+    private var aciklama = ""
     private var latitude = 0.0
     private var longitude = 0.0
 
-    private fun validateData() {
-        Log.d(TAG, "validateData: ")
+    private fun doğrulamaVerileri() {
+        Log.d(TAG, "doğrulamaVerileri: ")
 
-        brand = binding.brandEt.text.toString().trim()
-        category = binding.categoryAct.text.toString().trim()
-        condition = binding.conditionAct.text.toString().trim()
-        address = binding.locationAct.text.toString().trim()
-        price = binding.priceEt.text.toString().trim()
-        title = binding.titleEt.text.toString().trim()
-        description = binding.descriptionEt.text.toString().trim()
+        marka = binding.brandEt.text.toString().trim()
+        kategori = binding.categoryAct.text.toString().trim()
+        durum = binding.conditionAct.text.toString().trim()
+        adres = binding.locationAct.text.toString().trim()
+        fiyat = binding.priceEt.text.toString().trim()
+        baslik = binding.titleEt.text.toString().trim()
+        aciklama = binding.descriptionEt.text.toString().trim()
 
-        if(brand.isEmpty()){
+        if(marka.isEmpty()){
 
-            binding.brandEt.error = "Enter Brand"
+            binding.brandEt.error = "Marka Girin"
             binding.brandEt.requestFocus()
         }
-        else if(category.isEmpty()){
-            binding.categoryAct.error = "Choose Category"
+        else if(kategori.isEmpty()){
+            binding.categoryAct.error = "Kategori Seçin"
             binding.categoryAct.requestFocus()
         }
-        else if(condition.isEmpty()){
-            binding.conditionAct.error = "Choose Condition"
+        else if(durum.isEmpty()){
+            binding.conditionAct.error = "Durum Seçin"
             binding.conditionAct.requestFocus()
         }
-        else if(title.isEmpty()){
-            binding.titleEt.error = "Enter Title"
+        else if(baslik.isEmpty()){
+            binding.titleEt.error = "Başlık Girin"
             binding.titleEt.requestFocus()
         }
-        else if(description.isEmpty()){
-            binding.priceEt.error = "Enter Description"
+        else if(fiyat.isEmpty()){
+            binding.priceEt.error = "Açıklama Girin"
             binding.priceEt.requestFocus()
+        }
+        else if(aciklama.isEmpty()){
+            binding.descriptionEt.error = "Açıklama Girin"
+            binding.descriptionEt.requestFocus()
         }
         else{
 
             if(isEditMode){
 
-                updateAd()
+                İlanigüncelle()
             }else{
 
-                postAd()
+                ilanVer()
             }
         }
     }
-    private fun postAd() {
-        Log.d(TAG, "postAd: ")
-        progressDialog.setMessage("Posting Ad")
+    private fun ilanVer() {
+        Log.d(TAG, "ilanVer: ")
+        progressDialog.setMessage("İlan veriliyor...")
         progressDialog.show()
         val timestamp = Utils.getTimestamp()
 
@@ -340,13 +344,13 @@ class AdCreateActivity : AppCompatActivity() {
         val hashMap = HashMap<String, Any>()
         hashMap["id"] = "$keyId"
         hashMap["uid"] = "${firebaseAuth.uid}"
-        hashMap["brand"] = "$brand"
-        hashMap["category"] = "$category"
-        hashMap["condition"] = "$condition"
-        hashMap["address"] = "$address"
-        hashMap["price"] = "$price"
-        hashMap["title"] = "$title"
-        hashMap["description"] = "$description"
+        hashMap["brand"] = "$marka"
+        hashMap["category"] = "$kategori"
+        hashMap["condition"] = "$durum"
+        hashMap["address"] = "$adres"
+        hashMap["price"] = "$fiyat"
+        hashMap["title"] = "$baslik"
+        hashMap["description"] = "$aciklama"
         hashMap["status"] = "${Utils.AD_STATUS_AVAILABLE}"
         hashMap["timestamp"] = timestamp
         hashMap["latitude"] = latitude
@@ -355,30 +359,30 @@ class AdCreateActivity : AppCompatActivity() {
         refAds.child(keyId!!)
             .setValue(hashMap)
             .addOnSuccessListener {
-                Log.d(TAG, "postAd: Ad Published")
-                uploadImagesStorage(keyId)
+                Log.d(TAG, "ilanVer: ")
+                ResmiDepolamayaYukle(keyId)
             }
             .addOnFailureListener { e ->
-                Log.e(TAG,"postAd: ", e)
+                Log.e(TAG,"ilanVer: İlan Yayınlandı ", e)
                 progressDialog.dismiss()
-                Utils.toast(this, "Failed to post ad due to ${e.message}")
+                Utils.toast(this, "Nedeniyle ilan yayınlanamadı ${e.message}")
             }
     }
 
-    private fun updateAd(){
-        Log.d(TAG, "updateAd: ")
+    private fun İlanigüncelle(){
+        Log.d(TAG, "İlanigüncelle: ")
 
         progressDialog.setMessage("İlan Güncelleniyor...")
         progressDialog.show()
 
         val hashMap = HashMap<String, Any>()
-        hashMap["brand"] = "$brand"
-        hashMap["category"] = "$category"
-        hashMap["condition"] = "$condition"
-        hashMap["address"] = "$address"
-        hashMap["price"] = "$price"
-        hashMap["title"] = "$title"
-        hashMap["description"] = "$description"
+        hashMap["brand"] = "$marka"
+        hashMap["category"] = "$kategori"
+        hashMap["condition"] = "$durum"
+        hashMap["address"] = "$adres"
+        hashMap["price"] = "$fiyat"
+        hashMap["title"] = "$baslik"
+        hashMap["description"] = "$aciklama"
         hashMap["latitude"] = latitude
         hashMap["longitude"] = longitude
 
@@ -387,19 +391,19 @@ class AdCreateActivity : AppCompatActivity() {
             .updateChildren(hashMap)
             .addOnSuccessListener {
 
-                Log.d(TAG,"updateAd: İlan Güncellendi...")
+                Log.d(TAG,"İlanigüncelle: İlan Güncellendi...")
                 progressDialog.dismiss()
-                uploadImagesStorage(adIdForEditing)
+                ResmiDepolamayaYukle(adIdForEditing)
             }
             .addOnFailureListener { e ->
 
-                Log.e(TAG, "updateAd: ", e)
+                Log.e(TAG, "ilaniGuncelle: ", e)
                 progressDialog.dismiss()
-                Utils.toast(this, "Failed to update due to ${e.message}")
+                Utils.toast(this, "Nedeniyle güncellenemedi ${e.message}")
             }
     }
 
-    private fun uploadImagesStorage(adId: String) {
+    private fun ResmiDepolamayaYukle(adId: String) {
 
         for(i in imagesPickedArrayList.indices){
 
@@ -417,15 +421,15 @@ class AdCreateActivity : AppCompatActivity() {
                     .addOnProgressListener { snapshot ->
 
                         val progress = 100.0 * snapshot.bytesTransferred / snapshot.totalByteCount
-                        Log.d(TAG, "uploadImagesStorage: progress: $progress")
-                        val message = "Uploading Images... $imageIndexForProgress of ${imagesPickedArrayList.size} images... Progress ${progress.toInt()}"
-                        Log.d(TAG, "uploadImagesStorage: $message")
+                        Log.d(TAG, "ResmiDepolamayaYukle: yüzde: $progress")
+                        val message = "Resimler Yükleniyor... $imageIndexForProgress nin ${imagesPickedArrayList.size} resimler... % ${progress.toInt()}"
+                        Log.d(TAG, "ResmiDepolamayaYukle: $message")
 
                         progressDialog.setMessage(message)
                         progressDialog.show()
                     }
                     .addOnSuccessListener{ taskSnapshot ->
-                        Log.d(TAG, "uploadImagesStorage: onSuccess")
+                        Log.d(TAG, "ResmiDepolamayaYukle: Başarılı")
 
                         val uriTask = taskSnapshot.storage.downloadUrl
                         while (!uriTask.isSuccessful);
@@ -447,7 +451,7 @@ class AdCreateActivity : AppCompatActivity() {
                         progressDialog.dismiss()
                     }
                     .addOnFailureListener{ e ->
-                        Log.e(TAG, "uploadImagesStorage: ", e)
+                        Log.e(TAG, "ResmiDepolamayaYukle: ", e)
                         progressDialog.dismiss()
 
 
@@ -460,8 +464,8 @@ class AdCreateActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadAdDetails(){
-        Log.d(TAG, "loadAdDetails: ")
+    private fun IlanAyrintilariniYukle(){
+        Log.d(TAG, "IlanAyrintilariniYukle: ")
 
         val ref = FirebaseDatabase.getInstance().getReference("Ads")
         ref.child(adIdForEditing)
@@ -469,23 +473,23 @@ class AdCreateActivity : AppCompatActivity() {
 
                 override fun onDataChange(snapshot: DataSnapshot) {
 
-                    val brand = "${snapshot.child("brand").value}"
-                    val category = "${snapshot.child("category").value}"
-                    val condition = "${snapshot.child("condition").value}"
+                    val marka = "${snapshot.child("brand").value}"
+                    val kategori = "${snapshot.child("category").value}"
+                    val durum = "${snapshot.child("condition").value}"
                     latitude = (snapshot.child("latitude").value as Double) ?: 0.0
                     longitude = (snapshot.child("longitude").value as Double) ?: 0.0
-                    val address = "${snapshot.child("address").value}"
-                    val price = "${snapshot.child("price").value}"
-                    val title = "${snapshot.child("title").value}"
-                    val description = "${snapshot.child("description").value}"
+                    val adres = "${snapshot.child("address").value}"
+                    val fiyat = "${snapshot.child("price").value}"
+                    val baslik = "${snapshot.child("title").value}"
+                    val aciklama = "${snapshot.child("description").value}"
 
-                    binding.brandEt.setText(brand)
-                    binding.categoryAct.setText(category)
-                    binding.conditionAct.setText(condition)
-                    binding.locationAct.setText(address)
-                    binding.priceEt.setText(price)
-                    binding.titleEt.setText(title)
-                    binding.descriptionEt.setText(description)
+                    binding.brandEt.setText(marka)
+                    binding.categoryAct.setText(kategori)
+                    binding.conditionAct.setText(durum)
+                    binding.locationAct.setText(adres)
+                    binding.priceEt.setText(fiyat)
+                    binding.titleEt.setText(baslik)
+                    binding.descriptionEt.setText(aciklama)
 
                     val refImages = snapshot.child("Images").ref
                     refImages.addListenerForSingleValueEvent(object: ValueEventListener{
@@ -501,7 +505,7 @@ class AdCreateActivity : AppCompatActivity() {
                                 imagesPickedArrayList.add(modelImagePicked)
                             }
 
-                            loadImages()
+                            ResimleriYükle()
                         }
 
                         override fun onCancelled(error: DatabaseError) {
@@ -516,5 +520,4 @@ class AdCreateActivity : AppCompatActivity() {
             })
     }
 }
-
 

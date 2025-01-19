@@ -31,7 +31,7 @@ class DeleteAccountActivity : AppCompatActivity() {
         setContentView(root)
 
         progressDialog = ProgressDialog(this)
-        progressDialog.setTitle("Please wait...")
+        progressDialog.setTitle("Lütfen bekleyin...")
         progressDialog.setCanceledOnTouchOutside(false)
 
         firebaseAuth = FirebaseAuth.getInstance()
@@ -42,25 +42,25 @@ class DeleteAccountActivity : AppCompatActivity() {
         }
 
         binding.submitBtn.setOnClickListener {
-            deleteAccount()
+            hesabıSil()
         }
 
 
     }
 
-    private fun deleteAccount(){
-        Log.d((TAG), "deleteAccount: ")
+    private fun hesabıSil(){
+        Log.d((TAG), "hesabıSil: ")
 
-        progressDialog.setMessage("Deleting USer Account...")
+        progressDialog.setMessage("Kullanıcı Hesabı Siliniyor...")
         progressDialog.show()
 
         val myUid = firebaseAuth.uid
 
         firebaseUser!!.delete()
             .addOnSuccessListener {
-                Log.d(TAG, "deleteAccount: Account Deleted...")
+                Log.d(TAG, "hesabıSil: Hesap Silindi...")
 
-                progressDialog.setMessage("Deleting User Ads...")
+                progressDialog.setMessage("Kullanıcı İlanları Siliniyor...")
 
                 val refUserAds = FirebaseDatabase.getInstance().getReference("Ads")
                 refUserAds.orderByChild("uid").equalTo(myUid!!)
@@ -69,12 +69,12 @@ class DeleteAccountActivity : AppCompatActivity() {
                             for (ds in snapShot.children){
                                 ds.ref.removeValue()
                             }
-                           progressDialog.setMessage("Deleting User Data...")
+                           progressDialog.setMessage("Kullanıcı Verileri Siliniyor...")
 
                             val refUsers = FirebaseDatabase.getInstance().getReference("Users")
                             refUsers.child(myUid!!).removeValue()
                                 .addOnSuccessListener {
-                                    Log.d(TAG, "onDataChange: User Data Deleted...")
+                                    Log.d(TAG, "onDataChange: Kullanıcı Verileri Silindi...")
                                     progressDialog.dismiss()
                                     startMainActivity()
                                 }
@@ -83,7 +83,7 @@ class DeleteAccountActivity : AppCompatActivity() {
                                     progressDialog.dismiss()
                                     Utils.toast(
                                         this@DeleteAccountActivity,
-                                        "Failed to delete user data due to ${e.message}"
+                                        "Nedeniyle kullanıcı verileri silinemedi ${e.message}"
                                     )
                                     startMainActivity()
                                 }
@@ -97,9 +97,9 @@ class DeleteAccountActivity : AppCompatActivity() {
                     })
                 }
             .addOnFailureListener { e->
-                Log.e(TAG, "deleteAccount: Failed to delete account due to ${e.message}")
+                Log.e(TAG, "hesabıSil: Şu nedenlerden dolayı hesap silinemedi: ${e.message}")
                 progressDialog.dismiss()
-                Utils.toast(this, "Failed to delete account due to ${e.message}")
+                Utils.toast(this, "Şu nedenlerden dolayı hesap silinemedi: ${e.message}")
             }
     }
     private fun startMainActivity(){

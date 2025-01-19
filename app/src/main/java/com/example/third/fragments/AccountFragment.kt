@@ -41,7 +41,6 @@ class AccountFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         binding = FragmentAccountBinding.inflate(layoutInflater, container, false)
         return binding.root
     }
@@ -50,12 +49,12 @@ class AccountFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         progressDialog = ProgressDialog(mContext)
-        progressDialog.setTitle("Please wait...")
+        progressDialog.setTitle("Lütfen bekleyin...")
         progressDialog.setCanceledOnTouchOutside(false)
 
         firebaseAuth = FirebaseAuth.getInstance()
 
-        loadMyInfo()
+        bilgilerimiYükle()
 
         binding.logoutCv.setOnClickListener{
             firebaseAuth.signOut()
@@ -75,7 +74,7 @@ class AccountFragment : Fragment() {
         }
 
         binding.verifyAccountCv.setOnClickListener{
-            verifyAccount()
+            hesabıDoğrula()
         }
 
         binding.deleteAccountCv.setOnClickListener{
@@ -84,7 +83,7 @@ class AccountFragment : Fragment() {
         }
     }
 
-    private fun loadMyInfo(){
+    private fun bilgilerimiYükle(){
 
         val ref = FirebaseDatabase.getInstance().getReference("Users")
         ref.child("${firebaseAuth.uid}")
@@ -105,7 +104,7 @@ class AccountFragment : Fragment() {
                         timestamp = "0"
                     }
 
-                    val formattedDate = Utils.formatTimestampDate(timestamp.toLong())
+                    val formattedDate = Utils.formatZamanDamgasiTarih(timestamp.toLong())
 
                     binding.nameTv.text = name
                     binding.emailTv.text = email
@@ -118,16 +117,16 @@ class AccountFragment : Fragment() {
                         val isVerified = firebaseAuth.currentUser!!.isEmailVerified
                         if (isVerified){
                             binding.verifyAccountCv.visibility = View.GONE
-                            binding.verificationTv.text = "Verified"
+                            binding.verificationTv.text = "Doğrulandı"
                         }
                         else{
                             binding.verifyAccountCv.visibility = View.VISIBLE
-                            binding.verificationTv.text = "Not Verified"
+                            binding.verificationTv.text = "Doğrulanmadı"
                     }
                 }
                     else{
                         binding.verifyAccountCv.visibility = View.GONE
-                        binding.verificationTv.text = "Verified"
+                        binding.verificationTv.text = "Doğrulandı"
                     }
                     try {
                         Glide.with(mContext)
@@ -146,22 +145,22 @@ class AccountFragment : Fragment() {
             })
     }
 
-    private fun verifyAccount(){
-        Log.d(TAG, "verifyAccount: verifying account...")
-        progressDialog.setMessage("Sending account verification instructions to your email...")
+    private fun hesabıDoğrula(){
+        Log.d(TAG, "hesabıDoğrula: hesap doğrulanıyor...")
+        progressDialog.setMessage("...")
         progressDialog.show()
 
         firebaseAuth.currentUser!!.sendEmailVerification()
             .addOnSuccessListener {
-                Log.d(TAG, "verifyAccount: Successfully sent to email...")
+                Log.d(TAG, "hesabıDoğrula: Başarıyla e-postaya gönderildi...")
                 progressDialog.dismiss()
-                Utils.toast(mContext, "Instructions to verify account sent to your email...")
+                Utils.toast(mContext, "Hesap doğrulama talimatları e-postanıza gönderiliyor...")
 
             }
             .addOnFailureListener { e ->
-                Log.e(TAG, "verifyAccount: ", e)
+                Log.e(TAG, "hesabıDoğrula: ", e)
                 progressDialog.dismiss()
-                Utils.toast(mContext, "Failed to send due to ${e.message}")
+                Utils.toast(mContext, "Nedeniyle gönderilemedi ${e.message}")
 
             }
 

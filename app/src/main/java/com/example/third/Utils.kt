@@ -23,22 +23,22 @@ object Utils {
     const val FCM_SERVER_KEY = "MESSAGECLOUDIP"
 
 
-    val categories = arrayOf(
-        "All",
-        "Mobiles",
-        "Computer/Laptop",
-        "Electronics & Appliances",
-        "Vehicles",
-        "Furniture & Home Decor",
-        "Fashion & Beauty",
-        "Books",
-        "Sports",
-        "Animals",
-        "Businesses",
-        "Agriculture"
+    val kategoriler = arrayOf(
+        "Hepsi",
+        "Cep telefonları",
+        "Bilgisayar/Dizüstü Bilgisayar",
+        "Elektronik & Aletler",
+        "Araçlar",
+        "Mobilya ve Ev Dekorasyonu",
+        "Moda ve Güzellik",
+        "Kitaplar",
+        "Spor",
+        "Hayvanlar",
+        "İşletmeler",
+        "Tarım"
     )
 
-    val categoryIcons = arrayOf(
+    val kategoriSimgeleri = arrayOf(
         R.drawable.ic_category_all,
         R.drawable.ic_category_mobiles,
         R.drawable.ic_category_computer,
@@ -52,10 +52,10 @@ object Utils {
         R.drawable.ic_category_business,
         R.drawable.ic_category_agriculture,
     )
-    val condition = arrayOf(
-        "New",
-        "Used",
-        "Refurbished",
+    val durum = arrayOf(
+        "Yeni",
+        "Kullanılmış",
+        "yenilenmiş",
     )
 
 
@@ -68,21 +68,21 @@ object Utils {
         return System.currentTimeMillis()
     }
 
-    fun formatTimestampDate(timestamp: Long) : String {
+    fun formatZamanDamgasiTarih(timestamp: Long) : String {
 
         val calender = Calendar.getInstance(Locale.ENGLISH)
         calender.timeInMillis = timestamp
 
         return android.text.format.DateFormat.format("dd/MM/yyyy", calender).toString()
     }
-    fun formatTimestampDateTime(timestamp: Long) : String {
+    fun formatZamanDamgasiTarihZaman(timestamp: Long) : String {
         val calender = Calendar.getInstance(Locale.ENGLISH)
         calender.timeInMillis = timestamp
 
         return android.text.format.DateFormat.format("dd/MM/yyyy hh:mm:aa", calender).toString()
     }
 
-    fun chatPath(receiptUid: String, yourUid: String) : String {
+    fun sohbetYolu(receiptUid: String, yourUid: String) : String {
 
 
         val arrayUids = arrayOf(receiptUid, yourUid)
@@ -92,11 +92,11 @@ object Utils {
         return "${arrayUids[0]}_${arrayUids[1]}"
     }
 
-    fun addToFavorite(context: Context, adId: String) {
+    fun FavorilereEkle(context: Context, adId: String) {
 
         val firebaseAuth = FirebaseAuth.getInstance()
         if (firebaseAuth.currentUser == null) {
-            Utils.toast(context, "You're not logged in")
+            Utils.toast(context, "Giriş yapmadınız")
         } else {
 
             val timestamp = Utils.getTimestamp()
@@ -109,42 +109,42 @@ object Utils {
             ref.child(firebaseAuth.uid!!).child("Favorites").child(adId)
                 .setValue(hashMap)
                 .addOnSuccessListener {
-                    Utils.toast(context, "Added to favorite")
+                    Utils.toast(context, "Favorilere eklendi")
                 }
                 .addOnFailureListener { e ->
-                    Utils.toast(context, "Failed to add to favorite due to ${e.message}")
+                    Utils.toast(context, "nedeniyle favorilere eklenemedi: ${e.message}")
                 }
         }
     }
 
-    fun removeFromFavorite(context: Context, adId: String) {
+    fun FavorilerdenKaldir(context: Context, adId: String) {
         val firebaseAuth = FirebaseAuth.getInstance()
 
         if (firebaseAuth.currentUser == null) {
-            Utils.toast(context, "You're not logged in")
+            Utils.toast(context, "Giriş yapmadınız")
         } else {
             val ref = FirebaseDatabase.getInstance().getReference("Users")
             ref.child(firebaseAuth.uid!!).child("Favorites").child(adId)
                 .removeValue()
                 .addOnSuccessListener {
-                    Utils.toast(context, "Removed from favorite")
-                    }
+                    Utils.toast(context, "Favorilerden kaldırıldı")
+                }
                 .addOnFailureListener { e ->
-                    Utils.toast(context, "Failed to remove from favorite due to ${e.message}")
+                    Utils.toast(context, "Şu nedenden dolayı favorilerden kaldırılamadı: ${e.message}")
                 }
         }
     }
 
-    fun callIntent(context: Context, phone: String) {
+    fun cagriAmaci(context: Context, phone: String) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("tel:${Uri.encode(phone)}"))
         context.startActivity(intent)
     }
-    fun smsIntent(context: Context, phone: String) {
+    fun smsAmaci(context: Context, phone: String) {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("sms: ${Uri.encode(phone)}"))
         context.startActivity(intent)
     }
 
-    fun mapIntent(context: Context, latitude: Double, longitude: Double) {
+    fun haritaAmaci(context: Context, latitude: Double, longitude: Double) {
 
         val gmmIntentUri = Uri.parse("http://maps.google.com/maps?daddr=$latitude,$longitude")
 
@@ -157,7 +157,7 @@ object Utils {
             context.startActivity(mapIntent)
         } else {
 
-            Utils.toast(context, "Google Maps not found")
+            Utils.toast(context, "Google Haritalar bulunamadı")
 
         }
 

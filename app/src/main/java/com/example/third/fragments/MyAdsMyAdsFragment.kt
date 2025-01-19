@@ -40,7 +40,7 @@ class MyAdsMyAdsFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
+
         binding = FragmentMyAdsMyAdsBinding.inflate(inflater, container, false)
 
         return binding.root
@@ -51,7 +51,7 @@ class MyAdsMyAdsFragment : Fragment() {
 
         firebaseAuth = FirebaseAuth.getInstance()
 
-        loadAds()
+        ilanlarıYükle()
 
         binding.serachEt.addTextChangedListener(object: TextWatcher{
 
@@ -75,8 +75,8 @@ class MyAdsMyAdsFragment : Fragment() {
         })
     }
 
-    private fun loadAds(){
-        Log.d(TAG, "loadAds: ")
+    private fun ilanlarıYükle(){
+        Log.d(TAG, "ilanlarıYükle: ")
 
         adArrayList = ArrayList()
 

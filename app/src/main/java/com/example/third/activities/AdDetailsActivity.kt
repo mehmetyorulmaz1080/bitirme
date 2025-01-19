@@ -64,10 +64,10 @@ class AdDetailsActivity : AppCompatActivity() {
         Log.d(TAG, "onCreate: adId: $adId")
 
         if (firebaseAuth.currentUser!=null){
-            checkIsFavorite()
+            favoriOlupOlmadığınıKontrolEt()
         }
-        loadAdDetails()
-        loadAdImages()
+        ilanAyrıntılarınıYükle()
+        ilanGörselleriniYükle()
 
         binding.toolbarBackBtn.setOnClickListener{
             onBackPressed()
@@ -76,28 +76,28 @@ class AdDetailsActivity : AppCompatActivity() {
         binding.toolbarDeleteBtn.setOnClickListener{
 
             val materialAlertDialogBuilder = MaterialAlertDialogBuilder(this)
-            materialAlertDialogBuilder.setTitle("Delete Ad")
-                .setMessage("Are you sure you want to delete this ad?")
-                .setPositiveButton("DELETE"){ dialog, which ->
+            materialAlertDialogBuilder.setTitle("İlanı Sil")
+                .setMessage("Bu ilanı silmek istediğinizden emin misiniz?")
+                .setPositiveButton("SİL"){ dialog, which ->
                     Log.d(TAG,"onCreate: DELETE clicked")
-                    deleteAd()
+                    ilanıSil()
                 }
-                .setNegativeButton("CANCEL"){ dialog, which ->
-                    Log.d(TAG, "onCreate: CANCEL clicked")
+                .setNegativeButton("İPTAL"){ dialog, which ->
+                    Log.d(TAG, "onCreate: İPTAL tıklandı")
                     dialog.dismiss()
                 }
                 .show()
         }
 
         binding.toolbarEditBtn.setOnClickListener{
-            editOptionsDialog()
+            iletişimKutusunuDüzenle()
         }
 
         binding.toolbarFavBtn.setOnClickListener{
             if (favorite){
-                Utils.removeFromFavorite(this, adId)
+                Utils.FavorilerdenKaldir(this, adId)
             }else{
-                Utils.addToFavorite(this, adId)
+                Utils.FavorilereEkle(this, adId)
             }
         }
 
@@ -116,25 +116,25 @@ class AdDetailsActivity : AppCompatActivity() {
         }
 
         binding.callBtn.setOnClickListener{
-            Utils.callIntent(this, sellerPhone)
+            Utils.cagriAmaci(this, sellerPhone)
         }
         binding.smsBtn.setOnClickListener{
-            Utils.smsIntent(this, sellerPhone)
+            Utils.smsAmaci(this, sellerPhone)
         }
 
         binding.mapBtn.setOnClickListener{
-            Utils.mapIntent(this, adLatitude, adLongitude)
+            Utils.haritaAmaci(this, adLatitude, adLongitude)
         }
 
     }
 
-    private fun editOptionsDialog(){
-        Log.d(TAG, "editOptionsDialog: ")
+    private fun iletişimKutusunuDüzenle(){
+        Log.d(TAG, "iletişimKutusunuDüzenle: ")
 
         val popupMenu = PopupMenu(this, binding.toolbarEditBtn)
 
-        popupMenu.menu.add(Menu.NONE, 0, 0, "Edit")
-        popupMenu.menu.add(Menu.NONE, 1, 1, "Mark as Sold")
+        popupMenu.menu.add(Menu.NONE, 0, 0, "Düzenle")
+        popupMenu.menu.add(Menu.NONE, 1, 1, "Satıldı Olarak İşaretle")
 
         popupMenu.show()
 
@@ -149,21 +149,21 @@ class AdDetailsActivity : AppCompatActivity() {
                 startActivity(intent)
             }else if (itemId == 1){
 
-                showMarkAsSoldDialog()
+                satıldıOlarakİşaretleİletişimKutusunugöster()
             }
 
             return@setOnMenuItemClickListener true
         }
     }
 
-    private fun showMarkAsSoldDialog(){
-        Log.d(TAG, "showMarkAsSoldDialog: ")
+    private fun satıldıOlarakİşaretleİletişimKutusunugöster(){
+        Log.d(TAG, "satıldıOlarakİşaretleİletişimKutusunugöster: ")
 
         val alertDialogBuilder = MaterialAlertDialogBuilder(this)
-        alertDialogBuilder.setTitle("Mark as Sold")
-            .setMessage("Are you sure you want to mark this ad as sold?")
-            .setPositiveButton("SOLD"){ dialog, which ->
-                Log.d(TAG, "showMarkAsSoldDialog: SOLD clicked")
+        alertDialogBuilder.setTitle("Satıldı Olarak İşaretle")
+            .setMessage("Bu ilanı satıldı olarak işaretlemek istediğinizden emin misiniz?")
+            .setPositiveButton("SATILDI"){ dialog, which ->
+                Log.d(TAG, "showMarkAsSoldDialog: SATILDI tıklandı")
 
                 val hashMap = HashMap<String, Any>()
                 hashMap["status"] = "${Utils.AD_STATUS_SOLD}"
@@ -173,24 +173,24 @@ class AdDetailsActivity : AppCompatActivity() {
                     .updateChildren(hashMap)
                     .addOnSuccessListener {
 
-                        Log.d(TAG,"showMarkAsSoldDialog: Marked as sold")
+                        Log.d(TAG,"satıldıOlarakİşaretleİletişimKutusunugöster: Satıldı olarak işaretlendi")
                     }
                     .addOnFailureListener { e ->
 
-                        Log.e(TAG,"showMArkAsSoldDialog: ", e)
-                        Utils.toast(this,"Failed to mark as sold due to ${e.message}")
+                        Log.e(TAG,"satıldıOlarakİşaretleİletişimKutusunugöster: ", e)
+                        Utils.toast(this,"Nedeniyle satıldı olarak işaretlenemedi ${e.message}")
                     }
             }
-            .setNegativeButton("CANCEL"){ dialog, which ->
+            .setNegativeButton("İPTAL"){ dialog, which ->
 
-                Log.d(TAG, "showMarkAsSoldDialog: CANCEL clicked")
+                Log.d(TAG, "satıldıOlarakİşaretleİletişimKutusunugöster: İPTAL tıklandı")
                 dialog.dismiss()
             }
             .show()
 
     }
 
-    private fun loadAdDetails() {
+    private fun ilanAyrıntılarınıYükle() {
         Log.d(TAG, "loadAdDetails: ")
 
         val ref = FirebaseDatabase.getInstance().getReference("Ads")
@@ -213,7 +213,7 @@ class AdDetailsActivity : AppCompatActivity() {
                         adLongitude = modelAd.longitude
                         val timestamp = modelAd.timestamp
 
-                        val formattedDate = Utils.formatTimestampDate(timestamp)
+                        val formattedDate = Utils.formatZamanDamgasiTarih(timestamp)
 
                         if (sellerUid == firebaseAuth.uid){
                             binding.toolbarEditBtn.visibility = View.VISIBLE
@@ -243,7 +243,7 @@ class AdDetailsActivity : AppCompatActivity() {
                         binding.priceTv.text = price
                         binding.dateTv.text = formattedDate
 
-                        loadSellerDetails()
+                        yükleSatıcıDetayları()
 
                     }catch (e:Exception){
                         Log.e(TAG, "onDataChange: ", e)
@@ -256,8 +256,8 @@ class AdDetailsActivity : AppCompatActivity() {
             })
     }
 
-    private fun loadSellerDetails(){
-        Log.d(TAG, "loadSellerDetails: ")
+    private fun yükleSatıcıDetayları(){
+        Log.d(TAG, "yükleSatıcıDetayları: ")
 
         val ref = FirebaseDatabase.getInstance().getReference("Users")
         ref.child(sellerUid)
@@ -270,7 +270,7 @@ class AdDetailsActivity : AppCompatActivity() {
                     val profileImageUrl = "${snapshot.child("profileImageUrl").value}"
                     val timestamp = snapshot.child("timestamp").value as Long
 
-                    val formattedDate = Utils.formatTimestampDate(timestamp)
+                    val formattedDate = Utils.formatZamanDamgasiTarih(timestamp)
 
                     sellerPhone = "$phoneCode$phoneNumber"
 
@@ -293,19 +293,13 @@ class AdDetailsActivity : AppCompatActivity() {
             })
     }
 
-    private fun checkIsFavorite(){
-        Log.d(TAG,"checkIsFavorite: ")
+    private fun favoriOlupOlmadığınıKontrolEt(){
+        Log.d(TAG,"favoriOlupOlmadığınıKontrolEt: ")
 
         val ref = FirebaseDatabase.getInstance().getReference("Users")
         ref.child("${firebaseAuth.uid}").child("Favorites").child(adId)
             .addValueEventListener(object: ValueEventListener{
                 override fun onDataChange(snapshot: DataSnapshot) {
-
-                    //buraya bi bak bakalım
-                    /*
-                    favorite = snapshot.child(adId).exists()
-                    Log.d(TAG, "onDataChange: favorite: $favorite")
-                     */
 
                     if (favorite){
                         binding.toolbarFavBtn.setImageResource(R.drawable.ic_fav_yes)
@@ -319,8 +313,8 @@ class AdDetailsActivity : AppCompatActivity() {
             })
     }
 
-    private fun loadAdImages(){
-        Log.d(TAG, "loadAdImages: ")
+    private fun ilanGörselleriniYükle(){
+        Log.d(TAG, "ilanGörselleriniYükle: ")
 
         imageSliderArrayList = ArrayList()
 
@@ -349,23 +343,23 @@ class AdDetailsActivity : AppCompatActivity() {
             })
     }
 
-    private fun deleteAd(){
-        Log.d(TAG, "deleteAd: ")
+    private fun ilanıSil(){
+        Log.d(TAG, "ilanıSil: ")
 
         val ref = FirebaseDatabase.getInstance().getReference("Ads")
         ref.child(adId)
             .removeValue()
             .addOnSuccessListener {
 
-                Log.d(TAG, "deleteAd: Ad deleted")
-                Utils.toast(this," Deleted...")
+                Log.d(TAG, "ilanıSil: İLan silindi")
+                Utils.toast(this," Silindi...")
 
                 finish()
             }
             .addOnFailureListener { e ->
 
-                Log.e(TAG, "deleteAd: ", e)
-                Utils.toast(this,"Failed to delete due to ${e.message}")
+                Log.e(TAG, "ilanıSil: ", e)
+                Utils.toast(this,"Nedeniyle silinemedi ${e.message}")
             }
     }
 }

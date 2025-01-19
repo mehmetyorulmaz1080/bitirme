@@ -28,7 +28,7 @@ class LoginEmailActivity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
 
         progressDialog = ProgressDialog(this)
-        progressDialog.setTitle("Please wait...")
+        progressDialog.setTitle("Lütfen bekleyin...")
         progressDialog.setCanceledOnTouchOutside(false)
 
         binding.toolbarBackBtn.setOnClickListener{
@@ -43,53 +43,53 @@ class LoginEmailActivity : AppCompatActivity() {
         }
 
         binding.loginBtn.setOnClickListener{
-            validateData()
+            doğrulamaVerileri()
         }
     }
 
     private var email = ""
     private var password = ""
 
-    private fun validateData(){
+    private fun doğrulamaVerileri(){
         email = binding.emailEt.text.toString().trim()
         password = binding.passwordEt.text.toString().trim()
 
-        Log.d(TAG, "validateData: email: $email")
-        Log.d(TAG, "validateData: password: $password")
+        Log.d(TAG, "doğrulamaVerileri: email: $email")
+        Log.d(TAG, "doğrulamaVerileri: password: $password")
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
 
-            binding.passwordEt.error = "Invalid Email Format"
+            binding.passwordEt.error = "Geçersiz E-posta Formatı"
             binding.passwordEt.requestFocus()
         }
         else if (password.isEmpty()){
-            binding.passwordEt.error = "Enter Password"
+            binding.passwordEt.error = "Şifreyi Girin"
             binding.passwordEt.requestFocus()
         }
         else{
-            loginUser()
+            kullanıcıOturumuAç()
         }
     }
 
-    private fun loginUser(){
-        Log.d(TAG, "loginUSer: ")
+    private fun kullanıcıOturumuAç(){
+        Log.d(TAG, "kullanıcıOturumuAç: ")
 
-        progressDialog.setMessage("Logging In...")
+        progressDialog.setMessage("Giriş Yap...")
         progressDialog.show()
 
         firebaseAuth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener {
-                Log.d(TAG, "Login User: Logged In...")
+                Log.d(TAG, "Kullanıcı Girişi: Giriş Yapıldı...")
                 progressDialog.dismiss()
 
                 startActivity(Intent(this, MainActivity::class.java))
                 finishAffinity()
             }
             .addOnFailureListener() { e ->
-                Log.e(TAG, "LoginUser: " , e)
+                Log.e(TAG, "kullanıcıOturumuAç: " , e)
                 progressDialog.dismiss()
 
-                Utils.toast(this, "Unable to login to due to ${e.message}")
+                Utils.toast(this, "Nedeniyle oturum açılamıyor ${e.message}")
             }
     }
 }

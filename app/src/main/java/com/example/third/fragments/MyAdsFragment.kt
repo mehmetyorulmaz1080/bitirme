@@ -37,7 +37,7 @@ class MyAdsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+
         binding = FragmentMyAdsBinding.inflate(inflater, container, false)
 
         return binding.root
@@ -46,8 +46,8 @@ class MyAdsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("My Ads"))
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Favorites"))
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("İlanlarım"))
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Favoriler"))
 
         val fragmentManager = childFragmentManager
         myTabsViewPagerAdapter = MyTabsViewPagerAdapter(childFragmentManager, lifecycle)

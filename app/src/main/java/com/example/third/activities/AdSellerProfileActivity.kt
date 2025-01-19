@@ -37,8 +37,8 @@ class AdSellerProfileActivity : AppCompatActivity() {
         sellerUid = intent.getStringExtra("sellerUid").toString()
         Log.d(TAG, "onCreate: sellerUid: $sellerUid")
 
-        loadSellerDetails()
-        loadAds()
+        yükleSatıcıDetayları()
+        ilanlarıYükle()
 
         binding.toolbarBackBtn.setOnClickListener{
             onBackPressed()
@@ -46,8 +46,8 @@ class AdSellerProfileActivity : AppCompatActivity() {
 
     }
 
-    private fun loadSellerDetails() {
-        Log.d(TAG,"loadSellerDetails: ")
+    private fun yükleSatıcıDetayları() {
+        Log.d(TAG,"yükleSatıcıDetayları: ")
 
         val ref = FirebaseDatabase.getInstance().getReference("Users")
         ref.child(sellerUid)
@@ -58,7 +58,7 @@ class AdSellerProfileActivity : AppCompatActivity() {
                     val profileImageUrl = "${snapshot.child("profileImageUrl").value}"
                     val timestamp = snapshot.child("timestamp").value as Long
 
-                    val formattedDate = Utils.formatTimestampDate(timestamp)
+                    val formattedDate = Utils.formatZamanDamgasiTarih(timestamp)
 
                     binding.sellerNameTv.text = name
                     binding.sellerMemberSinceIv.text = formattedDate
@@ -78,8 +78,8 @@ class AdSellerProfileActivity : AppCompatActivity() {
             })
     }
 
-    private fun loadAds(){
-        Log.d(TAG, "loadAds: ")
+    private fun ilanlarıYükle(){
+        Log.d(TAG, "ilanlarıYükle: ")
 
         val adArraylist:ArrayList<ModelAd> = ArrayList()
 

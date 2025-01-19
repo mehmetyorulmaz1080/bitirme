@@ -44,27 +44,27 @@ class LoginPhoneActivity : AppCompatActivity() {
 
         firebaseAuth = FirebaseAuth.getInstance()
 
-        phoneLoginCallBacks()
+        telefonGirişGeriAramalar()
 
         binding.toolbarBackBtn.setOnClickListener {
             onBackPressed()
         }
 
         binding.sendOtpBtn.setOnClickListener {
-            validateData()
+            doğrulamaVerileri()
         }
 
         binding.verifyOtpBtn.setOnClickListener {
             val otp = binding.otpEt.text.toString().trim()
             Log.d(TAG, "onCreate: otp: $otp")
             if(otp.isEmpty()){
-                binding.otpEt.error = "Enter OTP"
+                binding.otpEt.error = "Kod girin"
                 binding.otpEt.requestFocus()
             }else if(otp.length < 6){
-                binding.otpEt.error = "OTP length must be 6 characters long"
+                binding.otpEt.error = "Kod uzunluğu 6 karakter uzunluğunda olmalıdır"
                 binding.otpEt.requestFocus()
             }else{
-                verifyPhoneNumberWithCode(mVerificationId, otp)
+                telefonNumarasınıKodlaDoğrula(mVerificationId, otp)
             }
 
 
@@ -72,7 +72,7 @@ class LoginPhoneActivity : AppCompatActivity() {
 
         binding.resendOtpTv.setOnClickListener {
 
-            resendVerificationCode(forceRefreshingToken)
+            doğrulamaKodunuYenidenGönder(forceRefreshingToken)
 
         }
 
@@ -82,26 +82,26 @@ class LoginPhoneActivity : AppCompatActivity() {
     private var phoneNumber = ""
     private var phoneNumberWithCode = ""
 
-    private fun validateData(){
+    private fun doğrulamaVerileri(){
 
         phoneCode = binding.phoneCodeTil.selectedCountryCodeWithPlus
         phoneNumber = binding.phoneNumberEt.text.toString().trim()
         phoneNumberWithCode = phoneCode + phoneNumber
 
-        Log.d(TAG, "validateData: phoneCode: $phoneCode")
-        Log.d(TAG, "validateData: phoneNumber: $phoneNumber")
-        Log.d(TAG, "validateData: phoneNumberWithCode: $phoneNumberWithCode")
+        Log.d(TAG, "doğrulamaVerileri: phoneCode: $phoneCode")
+        Log.d(TAG, "doğrulamaVerileri: phoneNumber: $phoneNumber")
+        Log.d(TAG, "doğrulamaVerileri: phoneNumberWithCode: $phoneNumberWithCode")
 
         if(phoneNumber.isEmpty()){
            binding.phoneNumberEt.error = "Telefon numaranızı girin"
            binding.phoneNumberEt.requestFocus()
         }else{
-            startPhoneNumberVerification()
+            telefonNumarasıDoğrulamayıBaşlat()
         }
     }
 
-    private fun startPhoneNumberVerification(){
-        Log.d(TAG, "startPhoneNumberVerification: ")
+    private fun telefonNumarasıDoğrulamayıBaşlat(){
+        Log.d(TAG, "telefonNumarasıDoğrulamayıBaşlat: ")
         progressDialog.setMessage("Kod gönderiliyor $phoneNumberWithCode")
         progressDialog.show()
         val options = PhoneAuthOptions.newBuilder(firebaseAuth)
@@ -113,15 +113,15 @@ class LoginPhoneActivity : AppCompatActivity() {
         PhoneAuthProvider.verifyPhoneNumber(options)
     }
 
-    private fun phoneLoginCallBacks(){
-        Log.d(TAG, "PhoneLoginCallBacks: ")
+    private fun telefonGirişGeriAramalar(){
+        Log.d(TAG, "telefonGirişGeriAramalar: ")
 
         mCallbacks = object: OnVerificationStateChangedCallbacks(){
 
             override fun onVerificationCompleted(credential: PhoneAuthCredential) {
                 Log.d(TAG, "onVerificationCompleted: ")
 
-                signInWithPhoneAuthCredential(credential)
+                telefonKimlikDoğrulamaBilgileriyleOturumAçın(credential)
 
             }
 
@@ -157,21 +157,21 @@ class LoginPhoneActivity : AppCompatActivity() {
         }
     }
 
-    private fun verifyPhoneNumberWithCode(verificationId: String?, otp: String) {
-        Log.d(TAG, "verifyPhoneNumberWithCode: verificationId: $verificationId")
-        Log.d(TAG, "verifyPhoneNumberWithCode: otp: $otp")
+    private fun telefonNumarasınıKodlaDoğrula(verificationId: String?, otp: String) {
+        Log.d(TAG, "telefonNumarasınıKodlaDoğrula: verificationId: $verificationId")
+        Log.d(TAG, "telefonNumarasınıKodlaDoğrula: otp: $otp")
 
         progressDialog.setMessage("Verifying OTP")
         progressDialog.show()
 
         val credential = PhoneAuthProvider.getCredential(verificationId!!, otp)
-        signInWithPhoneAuthCredential(credential)
+        telefonKimlikDoğrulamaBilgileriyleOturumAçın(credential)
     }
 
-    private fun resendVerificationCode(token: ForceResendingToken?){
-        Log.d(TAG, "resendVerificationCode: ")
+    private fun doğrulamaKodunuYenidenGönder(token: ForceResendingToken?){
+        Log.d(TAG, "doğrulamaKodunuYenidenGönder: ")
 
-        progressDialog.setMessage("Resending OTP to $phoneNumberWithCode")
+        progressDialog.setMessage("Kod yeniden gönderiliyor $phoneNumberWithCode")
         progressDialog.show()
         val options = PhoneAuthOptions.newBuilder(firebaseAuth)
             .setPhoneNumber(phoneNumberWithCode)
@@ -183,36 +183,36 @@ class LoginPhoneActivity : AppCompatActivity() {
 
     }
 
-    private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) {
+    private fun telefonKimlikDoğrulamaBilgileriyleOturumAçın(credential: PhoneAuthCredential) {
 
-        Log.d(TAG, "signInWithPhoneAuthCredential")
+        Log.d(TAG, "telefonKimlikDoğrulamaBilgileriyleOturumAçın")
 
         progressDialog.setMessage("Logging In")
         progressDialog.show()
 
         firebaseAuth.signInWithCredential(credential)
             .addOnSuccessListener { authResult ->
-                Log.d(TAG, "signInWithPhoneAuthCredential: Success")
+                Log.d(TAG, "telefonKimlikDoğrulamaBilgileriyleOturumAçın: Başarı")
                 if(authResult.additionalUserInfo!!.isNewUser){
-                    Log.d(TAG, "signInWithPhoneAuthCredential: New User, Account Created")
-                    updateUserInfoDb()
+                    Log.d(TAG, "telefonKimlikDoğrulamaBilgileriyleOturumAçın: Yeni kullanıcı, Hesap Oluşturuldu")
+                    kullanıcıBilgisiVeritabanınıGüncelle()
                 }else{
-                    Log.d(TAG, "signInWithPhoneAuthCredential: Existing User, Logged In")
+                    Log.d(TAG, "telefonKimlikDoğrulamaBilgileriyleOturumAçın: Mevcut kullanıcı, Giriş yapıldı")
                     startActivity(Intent(this, MainActivity::class.java))
                     finishAffinity()
                 }
 
                 }
             .addOnFailureListener { e ->
-                Log.e(TAG, "signInWithPhoneAuthCredential: ", e)
+                Log.e(TAG, "telefonKimlikDoğrulamaBilgileriyleOturumAçın: ", e)
                 progressDialog.dismiss()
-                Utils.toast(this, "Failed to login due to ${e.message}")
+                Utils.toast(this, "Şu nedenden dolayı giriş yapılamadı: ${e.message}")
             }
     }
 
-    private fun updateUserInfoDb(){
-        Log.d(TAG, "updateUserInfoDb: ")
-        progressDialog.setMessage("Saving user info...")
+    private fun kullanıcıBilgisiVeritabanınıGüncelle(){
+        Log.d(TAG, "kullanıcıBilgisiVeritabanınıGüncelle: ")
+        progressDialog.setMessage("Kullanıc bilgileri kaydediliyor...")
         progressDialog.show()
 
         val timestamp = Utils.getTimestamp()
@@ -236,16 +236,16 @@ class LoginPhoneActivity : AppCompatActivity() {
         ref.child(registeredUserUid!!)
             .setValue(hashMap)
             .addOnSuccessListener {
-                Log.d(TAG, "updateUserInfoDb: User info saved...")
+                Log.d(TAG, "kullanıcıBilgisiVeritabanınıGüncelle: Kullanıcı bilgileri kaydedildi...")
                 progressDialog.dismiss()
 
                 startActivity(Intent(this, MainActivity::class.java))
                 finishAffinity()
             }
             .addOnFailureListener { e ->
-                Log.e(TAG, "updateUserInfoDb: ", e)
+                Log.e(TAG, "kullanıcıBilgisiVeritabanınıGüncelle: ", e)
                 progressDialog.dismiss()
-                Utils.toast(this, "Failed to save user info due to ${e.message}")
+                Utils.toast(this, "Şu nedenden dolayı giriş yapılamadı: ${e.message}")
             }
 
 

@@ -7,13 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".activities.LoginOptionsActivity">
 
-    <ImageButton
-        android:id="@+id/closeBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:padding="10dp"
-        android:src="@drawable/ic_close_white" />
+
 
     <ScrollView
         android:layout_width="match_parent"

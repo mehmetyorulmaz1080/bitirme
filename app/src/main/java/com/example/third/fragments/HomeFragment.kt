@@ -54,7 +54,7 @@ class HomeFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
+
         binding = FragmentHomeBinding.inflate(LayoutInflater.from(mContext), container, false)
 
         return binding.root
@@ -72,9 +72,9 @@ class HomeFragment : Fragment() {
         if (currentLatitude != 0.0 || currentLongitude != 0.0) {
             binding.locationTv.text = currentAddress
         }
-        loadCategories()
+        kategorileriYükle()
 
-        loadAds("Hepsi")
+        ilanlarıYükle("Hepsi")
 
         binding.searchEt.addTextChangedListener(object: TextWatcher{
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -100,15 +100,15 @@ class HomeFragment : Fragment() {
 
     }
 
-    private val locationPickerActivityResultLauncher = registerForActivityResult(
+    private val konumSeciciActivitySonucBaslatici = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ){result ->
         if (result.resultCode == Activity.RESULT_OK){
-            Log.d(TAG, "locationPickerActivityResultLauncher: RESULT OK")
+            Log.d(TAG, "konumSeciciActivitySonucBaslatici: SONUÇ TAMAM")
             val data = result.data
 
             if (data != null) {
-                Log.d(TAG, "locationPickerActivityResultLauncher: Location Picked!")
+                Log.d(TAG, "konumSeciciActivitySonucBaslatici: Yer Seçildi!")
                 currentLatitude = data.getDoubleExtra("LATITUDE", 0.0)
                 currentLongitude = data.getDoubleExtra("LONGITUDE", 0.0)
                 currentAddress = data.getStringExtra("ADDRESS").toString()
@@ -121,15 +121,15 @@ class HomeFragment : Fragment() {
 
                 binding.locationTv.text = currentAddress
 
-                loadAds("Hepsi")
+                ilanlarıYükle("Hepsi")
 
             }
         }else{
             Utils.toast(mContext, "İşlem iptal edildi!")
         }
     }
-    private fun loadAds(category: String) {
-        Log.d(TAG, "loadAds: Category: $category")
+    private fun ilanlarıYükle(category: String) {
+        Log.d(TAG, "ilanlarıYükle: Category: $category")
 
         adArrylist = ArrayList()
 
@@ -194,12 +194,12 @@ class HomeFragment : Fragment() {
     }
 
 
-    private fun loadCategories(){
+    private fun kategorileriYükle(){
 
         val categoryArrayList = ArrayList<ModelCategory>()
 
-        for (i in 0 until  Utils.categories.size){
-            val modelCategory = ModelCategory(Utils.categories[i], Utils.categoryIcons[i])
+        for (i in 0 until  Utils.kategoriler.size){
+            val modelCategory = ModelCategory(Utils.kategoriler[i], Utils.kategoriSimgeleri[i])
             categoryArrayList.add(modelCategory)
         }
 
@@ -208,7 +208,7 @@ class HomeFragment : Fragment() {
             override fun onCategoryClick(modelCategory: ModelCategory) {
 
                 val selectedCategory = modelCategory.category
-                loadAds(selectedCategory)
+                ilanlarıYükle(selectedCategory)
             }
         })
 

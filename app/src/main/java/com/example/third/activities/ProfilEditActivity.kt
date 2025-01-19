@@ -43,21 +43,21 @@ class ProfilEditActivity : AppCompatActivity() {
         setContentView(view)
 
         progressDialog = ProgressDialog(this)
-        progressDialog.setTitle("Please wait")
+        progressDialog.setTitle("Lütfen bekleyin...")
         progressDialog.setCanceledOnTouchOutside(false)
 
         firebaseAuth = FirebaseAuth.getInstance()
-        loadMyInfo()
+        bilgilerimiYükle()
 
         binding.toolbarBackBtn.setOnClickListener{
             onBackPressed()
         }
         binding.profileImagePickFab.setOnClickListener{
-            imagePickDialog()
+            iletişimKutusuResimSeçimi()
         }
 
         binding.updateBtn.setOnClickListener{
-            validateData()
+            ResimSecmeSecenekleriniGoster()
         }
     }
     private var name = ""
@@ -66,7 +66,7 @@ class ProfilEditActivity : AppCompatActivity() {
     private var phoneCode = ""
     private var phoneNumber = ""
 
-    private fun validateData(){
+    private fun ResimSecmeSecenekleriniGoster(){
         name = binding.nameEt.text.toString().trim()
         dob = binding.dobEt.text.toString().trim()
         email = binding.emailEt.text.toString().trim()
@@ -75,17 +75,17 @@ class ProfilEditActivity : AppCompatActivity() {
 
         if (imageUri == null){
 
-            updateProfileDb(null)
+            kullanıcıBilgisiVeritabanınıGüncelle(null)
         }
         else{
-            uploadProfilImageStorage()
+            profilResimDepolamasınıYükle()
 
         }
     }
-    private fun uploadProfilImageStorage(){
-        Log.d(TAG,"UploadProfileImageStorage: ")
+    private fun profilResimDepolamasınıYükle(){
+        Log.d(TAG,"profilResimDepolamasınıYükle: ")
 
-        progressDialog.setMessage("Uploading user profile image")
+        progressDialog.setMessage("Kullanıcı profili resmi yükleniyor")
         progressDialog.show()
 
         val filePathAndName = "UserProfile/profile_${firebaseAuth.uid}"
@@ -95,28 +95,28 @@ class ProfilEditActivity : AppCompatActivity() {
             .addOnProgressListener { snapshot ->
 
                 val progress = (100 * snapshot.bytesTransferred / snapshot.totalByteCount).toInt()
-                Log.d(TAG, "UploadProfilImageStorage: progress: $progress")
-                progressDialog.setMessage("Uploading profile image. Progress: $progress")
+                Log.d(TAG, "Profil Resmi Depolamaya Yükleme: yüzde: $progress")
+                progressDialog.setMessage("Profil resmi yükleniyor. Yüzde: $progress")
             }
             .addOnSuccessListener { taskSnapShot ->
 
-                Log.d(TAG, "UploadProfilImageStorage: Upload successful")
+                Log.d(TAG, "profilResimDepolamasınıYükle: Yükleme başarılı")
                 val uriTask = taskSnapShot.storage.downloadUrl
                 while (!uriTask.isSuccessful);
                 val uploadImageUrl = uriTask.result.toString()
                 if (uriTask.isSuccessful){
-                    updateProfileDb(uploadImageUrl)
+                    kullanıcıBilgisiVeritabanınıGüncelle(uploadImageUrl)
                 }
             }
             .addOnFailureListener{e ->
-                Log.e(TAG, "UploadProfilImageStorage: ", e)
+                Log.e(TAG, "profilResimDepolamasınıYükle: ", e)
                 progressDialog.dismiss()
-                Utils.toast(this, "Failed to upload profile image due to ${e.message}")
+                Utils.toast(this, "Şu nedenlerden dolayı profil resmi yüklenemedi: ${e.message}")
             }
     }
-    private fun updateProfileDb(uploadedImageUrl: String?){
-        Log.d(TAG, "UpdateProfileDb: ")
-        progressDialog.setMessage("Updating profile...")
+    private fun kullanıcıBilgisiVeritabanınıGüncelle(uploadedImageUrl: String?){
+        Log.d(TAG, "kullanıcıBilgisiVeritabanınıGüncelle: ")
+        progressDialog.setMessage("Profil güncelleniyor...")
         progressDialog.show()
 
         val hashMap = HashMap<String, Any>()
@@ -138,20 +138,20 @@ class ProfilEditActivity : AppCompatActivity() {
         reference.child("${firebaseAuth.uid}")
             .updateChildren(hashMap)
             .addOnSuccessListener {
-                Log.d(TAG, "updateProfilDb: Updated...")
+                Log.d(TAG, "kullanıcıBilgisiVeritabanınıGüncelle: Güncellendi...")
                 progressDialog.dismiss()
-                Utils.toast(this, "Updated...")
+                Utils.toast(this, "Güncellendi...")
 
                 imageUri = null
             }
             .addOnFailureListener { e ->
-                Log.e(TAG, "updateProfileDb: ", e)
+                Log.e(TAG, "kullanıcıBilgisiVeritabanınıGüncelle: ", e)
                 progressDialog.dismiss()
-                Utils.toast(this, "Failed to update due to ${e.message}")
+                Utils.toast(this, "Nedeniyle güncellenemedi ${e.message}")
             }
     }
-    private fun loadMyInfo(){
-        Log.d(TAG, "LoadMyInfo: ")
+    private fun bilgilerimiYükle(){
+        Log.d(TAG, "bilgilerimiYükle: ")
 
         val ref = FirebaseDatabase.getInstance().getReference("Users")
         ref.child("${firebaseAuth.uid}")
@@ -209,68 +209,68 @@ class ProfilEditActivity : AppCompatActivity() {
 
     }
 
-    private fun imagePickDialog(){
+    private fun iletişimKutusuResimSeçimi(){
 
         val popUpMenu = PopupMenu(this, binding.profileImagePickFab)
-        popUpMenu.menu.add(Menu.NONE,1,1,"Camera")
-        popUpMenu.menu.add(Menu.NONE,2,2,"Gallery")
+        popUpMenu.menu.add(Menu.NONE,1,1,"Kamera")
+        popUpMenu.menu.add(Menu.NONE,2,2,"Galeri")
         popUpMenu.show()
         popUpMenu.setOnMenuItemClickListener { item ->
 
             val itemId = item.itemId
             if (itemId == 1){
-                Log.d(TAG, "imagePickDialog: Camera Clicked, Check if camera permission is granted or not ")
+                Log.d(TAG, "iletişimKutusuResimSeçimi: Kamera Tıklandı, Kamera izninin verilip verilmediğini kontrol edin ")
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
-                    requestCameraPermissions.launch(arrayOf(android.Manifest.permission.CAMERA))
+                    istekKameraİzinleri.launch(arrayOf(android.Manifest.permission.CAMERA))
                 }
                 else{
-                    requestCameraPermissions.launch(arrayOf(android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                    istekKameraİzinleri.launch(arrayOf(android.Manifest.permission.CAMERA, android.Manifest.permission.WRITE_EXTERNAL_STORAGE))
                 }
             }
 
             else if (itemId == 2){
-                Log.d(TAG, "imagePickDialog: Gallery Clicked, Check if storage permission is granted or not ")
+                Log.d(TAG, "iletişimKutusuResimSeçimi: Galeri Tıklandı, Depolama izninin verilip verilmediğini kontrol edin ")
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
-                    pickImageGallery()
+                    resimGalerisiniSeç()
                 }
                 else{
-                    requestStoragePermissions.launch(arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE))
+                    depolamaİzinleriİsteyin.launch(arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE))
                 }
             }
             return@setOnMenuItemClickListener true
         }
     }
 
-    private val requestCameraPermissions = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){result ->
-        Log.d(TAG, "requestCameraPermissions: result: $result ")
+    private val istekKameraİzinleri = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()){result ->
+        Log.d(TAG, "istekKameraİzinleri: result: $result ")
         var areAllGranted = true
         for (isGranted in result.values){
             areAllGranted = areAllGranted && isGranted
         }
         if (areAllGranted){
-            Log.d(TAG, "requestCameraPermissions: All granted e.g. Camera, Storage")
-            pickImageCamera()
+            Log.d(TAG, "istekKameraİzinleri: Hepsi verildi; Kamera, Depolama ")
+            resimKamerasınıSeç()
         }
         else{
-            Log.d(TAG, "requestCameraPermissions: All or either one is denied")
-            Utils.toast(this, "Camera or Storage or both permissions denied")
+            Log.d(TAG, "istekKameraİzinleri: Hepsi veya biri reddedildi")
+            Utils.toast(this, "Kamera veya Depolama veya her iki izin de reddedildi")
         }
     }
-    private val requestStoragePermissions = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-        Log.d(TAG, "requestStoragePermissions: permissions: $permissions ")
+    private val depolamaİzinleriİsteyin = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+        Log.d(TAG, "depolamaİzinleriİsteyin: permissions: $permissions ")
 
         val allGranted = permissions.all { it.value }
 
         if (allGranted) {
-            pickImageGallery()
+            resimGalerisiniSeç()
         } else {
-            Utils.toast(this, "Storage permission denied")
+            Utils.toast(this, "Depolama izni reddedildi")
         }
     }
 
 
-    private fun pickImageCamera(){
-        Log.d(TAG, "pickImageCamera: ")
+    private fun resimKamerasınıSeç(){
+        Log.d(TAG, "resimKamerasınıSeç: ")
 
         val contentValues = ContentValues()
         contentValues.put(MediaStore.Images.Media.TITLE, "Temp_İmage_title")
@@ -280,14 +280,14 @@ class ProfilEditActivity : AppCompatActivity() {
 
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
-        cameraActivityResultLauncher.launch(intent)
+        kameraAktiviteSonuçBaşlatıcı.launch(intent)
 
     }
 
-    private val cameraActivityResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){result ->
+    private val kameraAktiviteSonuçBaşlatıcı = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){result ->
 
         if (result.resultCode == Activity.RESULT_OK){
-            Log.d(TAG, "cameraActivityResultLauncher: Image captured: imageUri: $imageUri")
+            Log.d(TAG, "kameraAktiviteSonuçBaşlatıcı: Yakalanan resim: imageUri: $imageUri")
 
             try {
                 Glide.with(this)
@@ -296,7 +296,7 @@ class ProfilEditActivity : AppCompatActivity() {
                     .into(binding.profileIv)
             }
             catch (e: Exception){
-                Log.e(TAG, "cameraActivityResultLauncher: ", e)
+                Log.e(TAG, "kameraAktiviteSonuçBaşlatıcı: ", e)
             }
         }
         else{
@@ -304,16 +304,16 @@ class ProfilEditActivity : AppCompatActivity() {
         }
     }
 
-    private fun pickImageGallery(){
-        Log.d(TAG, "pickImageGallery: ")
+    private fun resimGalerisiniSeç(){
+        Log.d(TAG, "resimGalerisiniSeç: ")
 
         val intent = Intent(Intent.ACTION_PICK)
 
         intent.type = "image/*"
-        galleryactivityResultlauncher.launch(intent)
+        galeriAktiviteSonuçBaşlatıcı.launch(intent)
     }
 
-    private val galleryactivityResultlauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){result ->
+    private val galeriAktiviteSonuçBaşlatıcı = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){result ->
         if (result.resultCode == Activity.RESULT_OK){
 
             val data = result.data
@@ -327,7 +327,7 @@ class ProfilEditActivity : AppCompatActivity() {
                     .into(binding.profileIv)
             }
             catch (e: Exception){
-                Log.e(TAG, "galleryActivityResultLauncher: ", e)
+                Log.e(TAG, "galeriAktiviteSonuçBaşlatıcı: ", e)
             }
         }
         else{

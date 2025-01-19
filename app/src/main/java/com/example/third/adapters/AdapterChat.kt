@@ -53,7 +53,7 @@ class AdapterChat : RecyclerView.Adapter<AdapterChat.HolderChat> {
         val message = modelChat.message
         val messageType = modelChat.messageType
 
-        val formattedDate = Utils.formatTimestampDateTime(timestamp)
+        val formattedDate = Utils.formatZamanDamgasiTarihZaman(timestamp)
 
         holder.timeTv.text = formattedDate
 

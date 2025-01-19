@@ -27,7 +27,7 @@ class ChangePasswordActivity : AppCompatActivity() {
         setContentView(root)
 
         progressDialog = ProgressDialog(this)
-        progressDialog.setTitle("Please wait...")
+        progressDialog.setTitle("Lütfen bekleyin...")
         progressDialog.setCanceledOnTouchOutside(false)
 
         firebaseAuth = FirebaseAuth.getInstance()
@@ -38,7 +38,7 @@ class ChangePasswordActivity : AppCompatActivity() {
         }
 
         binding.submitBtn.setOnClickListener{
-            validateData()
+            doğrulamaVerileri()
         }
 
     }
@@ -47,71 +47,71 @@ class ChangePasswordActivity : AppCompatActivity() {
     private var newPassword = ""
     private var confirmNewPassword = ""
 
-    private fun validateData(){
+    private fun doğrulamaVerileri(){
 
         currentPassword = binding.currentPasswordEt.text.toString().trim()
         newPassword = binding.newPasswordEt.text.toString().trim()
         confirmNewPassword = binding.confirmNewPasswordEt.text.toString().trim()
 
-        Log.d(TAG, "validateData: currentPassword: $currentPassword")
-        Log.d(TAG, "validateData: newPassword: $newPassword")
-        Log.d(TAG, "validateData: confirmNewPassword: $confirmNewPassword")
+        Log.d(TAG, "doğrulamaVerileri: Mevcut Şifre: $currentPassword")
+        Log.d(TAG, "doğrulamaVerileri: Yeni Şifre: $newPassword")
+        Log.d(TAG, "doğrulamaVerileri: Yeni Şifreyi onayla: $confirmNewPassword")
 
         if(currentPassword.isEmpty()){
-            binding.currentPasswordEt.error = "Enter current password!"
+            binding.currentPasswordEt.error = "Mevcut şifreyi girin!"
             binding.currentPasswordEt.requestFocus()
         }
         else if(newPassword.isEmpty()){
-            binding.newPasswordEt.error = "Enter new password!"
+            binding.newPasswordEt.error = "Yeni şifreyi girin!"
             binding.newPasswordEt.requestFocus()
             }
         else if(confirmNewPassword.isEmpty()){
-            binding.confirmNewPasswordEt.error = "Enter confirm new password!"
+            binding.confirmNewPasswordEt.error = "Yeni şifreyi girin ve onaylayın!"
             binding.confirmNewPasswordEt.requestFocus()
 
         }
         else if(newPassword != confirmNewPassword) {
-            binding.confirmNewPasswordEt.error = "Password doesn't match!"
+            binding.confirmNewPasswordEt.error = "Şifre eşleşmiyor!"
             binding.confirmNewPasswordEt.requestFocus()
         }
         else{
-            authenticateUserForUpdatePassword()
+            güncellemeŞifresiİçinKullanıcınınKimliğiniDoğrula()
         }
 
     }
 
-    private fun authenticateUserForUpdatePassword(){
+    private fun güncellemeŞifresiİçinKullanıcınınKimliğiniDoğrula(){
 
-        progressDialog.setMessage("Authenticating user...")
+        progressDialog.setMessage("Kullanıcının kimliği doğrulanıyor...")
         progressDialog.show()
 
         val authCredential = EmailAuthProvider.getCredential(firebaseUser.email.toString(), currentPassword)
         firebaseUser.reauthenticate(authCredential)
             .addOnSuccessListener {
-                Log.d(TAG, "authenticateUserForUpdatePassword: Authenticated...")
-                updatePassword()
+                Log.d(TAG, "güncellemeŞifresiİçinKullanıcınınKimliğiniDoğrula: Authenticated...")
+                güncellemeŞifre()
             }
             .addOnFailureListener { e ->
-                Log.e(TAG, "authenticateUserForUpdatePassword: ", e)
+                Log.e(TAG, "güncellemeŞifresiİçinKullanıcınınKimliğiniDoğrula: ", e)
                 progressDialog.dismiss()
-                Utils.toast(this, "Failed to authenticate due to ${e.message}")
+                Utils.toast(this, "Nedeniyle kimlik doğrulaması yapılamadı ${e.message}")
             }
     }
 
-    private fun updatePassword(){
-        progressDialog.setMessage("Updating password...")
+    private fun güncellemeŞifre(){
+        progressDialog.setMessage("Şifre güncelleniyor...")
         progressDialog.show()
 
         firebaseUser.updatePassword(newPassword)
             .addOnSuccessListener {
-                Log.d(TAG, "updatePassword: Password updated...")
+                Log.d(TAG, "güncellemeŞifre: Şifre güncellendi...")
                 progressDialog.dismiss()
-                Utils.toast(this, "Password updated...")
+                Utils.toast(this, "Şifre güncellendi...")
             }
             .addOnFailureListener { e ->
-                Log.e(TAG, "updatePassword: ", e)
+                Log.e(TAG, "güncellemeŞifre: ", e)
                 progressDialog.dismiss()
-                Utils.toast(this, "Failed to update due to ${e.message}")
+                Utils.toast(this, "Nedeniyle güncellenemedi ${e.message}")
             }
 
     }

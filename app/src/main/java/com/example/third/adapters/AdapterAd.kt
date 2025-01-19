@@ -64,7 +64,7 @@ class AdapterAd : RecyclerView.Adapter<AdapterAd.HolderAd>, Filterable {
         val address = modelAd.address
         val price = modelAd.price
         val timestamp = modelAd.timestamp
-        val formattedData = Utils.formatTimestampDate(timestamp)
+        val formattedData = Utils.formatZamanDamgasiTarih(timestamp)
         
         loadAdFirstImage(modelAd, holder)
         
@@ -89,9 +89,9 @@ class AdapterAd : RecyclerView.Adapter<AdapterAd.HolderAd>, Filterable {
 
             val favorite = modelAd.favorite
             if (favorite) {
-                Utils.removeFromFavorite(context, modelAd.id)
+                Utils.FavorilerdenKaldir(context, modelAd.id)
             } else {
-                Utils.addToFavorite(context, modelAd.id)
+                Utils.FavorilereEkle(context, modelAd.id)
             }
         }
 

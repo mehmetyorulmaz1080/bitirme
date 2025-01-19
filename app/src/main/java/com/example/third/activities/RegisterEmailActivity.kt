@@ -29,7 +29,7 @@ class RegisterEmailActivity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
 
         progressDialog = ProgressDialog(this)
-        progressDialog.setTitle("Please wait...")
+        progressDialog.setTitle("Lütfen bekleyin...")
         progressDialog.setCanceledOnTouchOutside(false)
 
         binding.toolbarBackBtn.setOnClickListener{
@@ -41,7 +41,7 @@ class RegisterEmailActivity : AppCompatActivity() {
         }
 
         binding.registerBtn.setOnClickListener{
-            validateData()
+            doğrulamaVerileri()
         }
 
     }
@@ -50,15 +50,15 @@ class RegisterEmailActivity : AppCompatActivity() {
     private var password = ""
     private var cPassword = ""
 
-    private fun validateData(){
+    private fun doğrulamaVerileri(){
 
         email = binding.emailEt.text.toString().trim()
         password = binding.passwordEt.text.toString().trim()
         cPassword = binding.cPasswordEt.text.toString().trim()
 
-        Log.d(TAG, "validateData: email : $email")
-        Log.d(TAG, "validateData: password : $password")
-        Log.d(TAG, "validateData: confirm password : $cPassword")
+        Log.d(TAG, "doğrulamaVerileri: email : $email")
+        Log.d(TAG, "doğrulamaVerileri: password : $password")
+        Log.d(TAG, "doğrulamaVerileri: confirm password : $cPassword")
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
 
@@ -67,46 +67,46 @@ class RegisterEmailActivity : AppCompatActivity() {
         }
         else if (password.isEmpty()){
 
-            binding.emailEt.error = "Enter Password"
+            binding.emailEt.error = "Şifre girin"
             binding.passwordEt.requestFocus()
         }
         else if (cPassword.isEmpty()){
 
-            binding.emailEt.error = "Enter Confirm Password"
+            binding.emailEt.error = "Mevcut şifrenizi girin"
             binding.passwordEt.requestFocus()
         }
         else if (password != cPassword){
 
-            binding.emailEt.error = "Password doesn't match"
+            binding.emailEt.error = "Şifreler eşleşmiyor"
             binding.passwordEt.requestFocus()
         }
         else{
-            registerUser()
+            kullanıcıyıKaydet()
         }
     }
 
-    private fun registerUser(){
-        Log.d(TAG, "registerUser: ")
+    private fun kullanıcıyıKaydet(){
+        Log.d(TAG, "kullanıcıyıKaydet: ")
 
-        progressDialog.setMessage("Creating Account")
+        progressDialog.setMessage("Hesap Oluşturma")
         progressDialog.show()
 
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener {
-                Log.d(TAG, "registerUser: Register Success")
-                updateUserInfo()
+                Log.d(TAG, "kullanıcıyıKaydet: Kayıt olma Başarılı ")
+                güncellemeKullanıcıBilgileri()
             }
             .addOnFailureListener{ e ->
-                Log.e(TAG, "registerUser: ", e)
+                Log.e(TAG, "kullanıcıyıKaydet: ", e)
                 progressDialog.dismiss()
-                Utils.toast(this, "Failed to create account due to ${e.message}")
+                Utils.toast(this, "Şu nedenlerden dolayı kayıt olamadı: ${e.message}")
             }
     }
 
-    private fun updateUserInfo(){
-        Log.d(TAG, "updateUserInfo")
+    private fun güncellemeKullanıcıBilgileri(){
+        Log.d(TAG, "güncellemeKullanıcıBilgileri")
 
-        progressDialog.setMessage("Saving User Info")
+        progressDialog.setMessage("Kullanıcı Bilgileri Kaydediliyor...")
 
         val timestamp = Utils.getTimestamp()
         val registeredUserEmail = firebaseAuth.currentUser!!.email
@@ -130,7 +130,7 @@ class RegisterEmailActivity : AppCompatActivity() {
             .setValue(hashMap)
             .addOnSuccessListener{
 
-                Log.d(TAG, "UpdateUserInfo: User registered...")
+                Log.d(TAG, "güncellemeKullanıcıBilgileri: Kullanıcı bilgileri kaydedildi...")
                 progressDialog.dismiss()
 
                 startActivity((Intent(this, MainActivity::class.java)))
@@ -138,9 +138,9 @@ class RegisterEmailActivity : AppCompatActivity() {
             }
             .addOnFailureListener{ e ->
 
-                Log.e(TAG, "updateUserInfo: ", e)
+                Log.e(TAG, "güncellemeKullanıcıBilgileri: ", e)
                 progressDialog.dismiss()
-                Utils.toast(this, "Failed to save user info due to ${e.message}")
+                Utils.toast(this, "Şu nedenlerden dolayı kullanıcı bilgileri kaydedilemedi: ${e.message}")
 
             }
     }

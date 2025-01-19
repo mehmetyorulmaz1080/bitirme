@@ -2,23 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/menu_home"
-        android:title="Home"
+        android:title="Anasayfa"
         android:icon="@drawable/ic_home_white"/>
 
     <item android:id="@+id/menu_chats"
-        android:title="Chats"
+        android:title="Sohbet"
         android:icon="@drawable/ic_chat_white"/>
 
     <item android:id="@+id/menu_sell"
-        android:title="Sell"
+        android:title="Satış"
         android:enabled="false" />
 
     <item android:id="@+id/menu_my_ads"
-        android:title="My Ads"
+        android:title="İlanlarım"
         android:icon="@drawable/ic_fav_white"/>
 
     <item android:id="@+id/menu_account"
-        android:title="Account"
+        android:title="Hesap"
         android:icon="@drawable/ic_person_white"/>
 
 </menu>

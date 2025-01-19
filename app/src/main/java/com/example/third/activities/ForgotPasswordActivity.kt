@@ -25,7 +25,7 @@ class ForgotPasswordActivity : AppCompatActivity() {
         setContentView(root)
 
         progressDialog = ProgressDialog(this)
-        progressDialog.setTitle("Please wait...")
+        progressDialog.setTitle("Lütfen bekleyin...")
         progressDialog.setCanceledOnTouchOutside(false)
 
         firebaseAuth = FirebaseAuth.getInstance()
@@ -52,25 +52,25 @@ class ForgotPasswordActivity : AppCompatActivity() {
             binding.emailEt.requestFocus()
         }
         else{
-            sendPasswordRecoveryInstructions()
+            ŞifreKurtarmaTalimatlarınıGönder()
         }
     }
 
-    private fun sendPasswordRecoveryInstructions(){
-        Log.d(TAG,"sendPasswordRecoveryInstructions: ")
+    private fun ŞifreKurtarmaTalimatlarınıGönder(){
+        Log.d(TAG,"ŞifreKurtarmaTalimatlarınıGönder: ")
 
-        progressDialog.setMessage("sending password reset instructions to $email")
+        progressDialog.setMessage("şifre sıfırlama talimatlarını gönderiliyor $email")
         progressDialog.show()
 
         firebaseAuth.sendPasswordResetEmail(email)
             .addOnSuccessListener {
                 progressDialog.dismiss()
-                Utils.toast(this, "Instructions to reset password has been sent to $email")
+                Utils.toast(this, "Şifre sıfırlama talimatları şu adrese gönderildi: $email")
             }
             .addOnFailureListener { e ->
                 progressDialog.dismiss()
-                Log.e(TAG, "sendPasswordRecoveryInstructions: ", e)
-                Utils.toast(this, "Failed to send due to ${e.message}")
+                Log.e(TAG, "ŞifreKurtarmaTalimatlarınıGönder: ", e)
+                Utils.toast(this, "Nedeniyle gönderilemedi ${e.message}")
             }
     }
 }

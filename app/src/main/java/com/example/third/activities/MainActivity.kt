@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.menu_chats -> {
 
                     if(firebaseAuth.currentUser == null){
-                        Utils.toast(this, "Login Required")
+                        Utils.toast(this, "Giriş Gerekli")
                         starLoginOptions()
 
                         false
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.menu_my_ads -> {
                     if(firebaseAuth.currentUser == null){
-                        Utils.toast(this, "Login Required")
+                        Utils.toast(this, "Giriş Gerekli")
                         starLoginOptions()
 
                         false
@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
 
                 R.id.menu_account -> {
                     if(firebaseAuth.currentUser == null){
-                        Utils.toast(this, "Login Required")
+                        Utils.toast(this, "Giriş Gerekli")
                         starLoginOptions()
 
                         false
@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
     private fun showHomeFragment() {
-        binding.toolbarTitleTv.text = "Home"
+        binding.toolbarTitleTv.text = "Anasayfa"
 
         val fragment = HomeFragment()
         val fragmentTransaction = supportFragmentManager.beginTransaction()
@@ -118,7 +118,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showChatsFragment() {
-        binding.toolbarTitleTv.text = "Chats"
+        binding.toolbarTitleTv.text = "Sohbet"
 
         val fragment = ChatsFragment()
         val fragmentTransaction = supportFragmentManager.beginTransaction()
@@ -127,7 +127,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showMyAdsFragment() {
-        binding.toolbarTitleTv.text = "My Ads"
+        binding.toolbarTitleTv.text = "İlanlarım"
 
         val fragment = MyAdsFragment()
         val fragmentTransaction = supportFragmentManager.beginTransaction()
@@ -137,7 +137,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showAccountFragment() {
-        binding.toolbarTitleTv.text = "Account"
+        binding.toolbarTitleTv.text = "Hesap"
 
         val fragment = AccountFragment()
         val fragmentTransaction = supportFragmentManager.beginTransaction()
